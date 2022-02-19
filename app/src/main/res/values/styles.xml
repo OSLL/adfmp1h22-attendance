@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BottomBar" parent="@style/Widget.Design.BottomNavigationView">
+        <item name="android:background">#1EA2ED</item>
+    </style>
+
+    <style name="BottomBarButton" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="MainCheckButton" parent="@style/Widget.AppCompat.Button">
+        <item name="android:shape">oval</item>
+        <item name="android:color">#2B7BC5</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+</resources>
