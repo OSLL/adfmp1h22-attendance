@@ -3,16 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/drawable/btn_custom.xml" value="0.18" />
         <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/drawable/check_card_1.xml" value="0.338" />
         <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/drawable/check_card_2.xml" value="0.338" />
         <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/drawable/check_item_selector.xml" value="0.338" />
+        <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/drawable/et_custom.xml" value="0.18" />
+        <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/drawable/ic_arrow_left.xml" value="0.18" />
+        <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/drawable/ic_arrow_right.xml" value="0.18" />
         <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/drawable/ic_launcher_background.xml" value="0.338" />
+        <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/layout/activity_login.xml" value="0.2672239108409321" />
         <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/layout/activity_main.xml" value="0.3109375" />
         <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/layout/fragment_available_check_list.xml" value="0.55" />
         <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/layout/fragment_available_check_list_list.xml" value="0.55" />
         <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/layout/fragment_check.xml" value="0.3109375" />
         <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/layout/fragment_check_view_item.xml" value="0.55" />
+        <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/layout/fragment_login.xml" value="0.2672239108409321" />
         <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/layout/fragment_profile.xml" value="0.3109375" />
+        <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/layout/fragment_register.xml" value="0.2672239108409321" />
         <entry key="..\:/Users/ksshi/AndroidStudioProjects/AndroidProj/app/src/main/res/layout/fragment_statistics.xml" value="0.3109375" />
       </map>
     </option>

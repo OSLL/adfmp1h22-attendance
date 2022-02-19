@@ -9,4 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="checkCardColor">#C3E2FF</color>
     <color name="checkCardColorPressed">#63B4FF</color>
+    <color name="gray">#d3d3d3</color>
+    <color name="colorPrimary">#00796b</color>
+    <color name="colorPrimaryDark">#00695C</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="buttonsColor">#2B7BC5</color>
 </resources>
