@@ -27,4 +27,5 @@
     <string name="Phone_profile_tag">телефон</string>
     <string name="Email_profile_tag">email</string>
     <string name="Edit_profile_str">Редактировать профиль</string>
+    <string name="saveChanges_str">Сохранить изменения</string>
 </resources>

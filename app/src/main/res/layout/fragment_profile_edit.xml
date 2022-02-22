@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:orientation="horizontal"
         android:background="@color/blue_dark">
 
@@ -47,14 +47,15 @@
                     android:layout_marginStart="15dp"
                     android:text="@string/surname"
                     android:textColor="@color/white"
-                    android:textSize="11sp" />
+                    android:textSize="11sp"/>
 
-                <TextView
-                    android:id="@+id/surnameValue"
+                <EditText
+                    android:id="@+id/surnameValue_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="@string/surname"
+                    android:height="48dp"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
@@ -68,12 +69,13 @@
                     android:textColor="@color/white"
                     android:textSize="11sp" />
 
-                <TextView
-                    android:id="@+id/nameValue"
+                <EditText
+                    android:id="@+id/nameValue_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="@string/name"
+                    android:height="48dp"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
@@ -87,11 +89,12 @@
                     android:textColor="@color/white"
                     android:textSize="11sp" />
 
-                <TextView
-                    android:id="@+id/parentNameValue"
+                <EditText
+                    android:id="@+id/parentNameValue_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
+                    android:height="48dp"
                     android:text="@string/familyName"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
@@ -104,35 +107,37 @@
                     android:layout_marginTop="15dp"
                     android:text="@string/Email_profile_tag"
                     android:textColor="@color/white"
-                    android:textSize="11sp"/>
+                    android:textSize="11sp" />
 
-                <TextView
-                    android:id="@+id/emailValue"
+                <EditText
+                    android:id="@+id/emailValue_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
+                    android:height="48dp"
                     android:text="@string/Email_profile_tag"
                     android:textColor="@color/white"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/phoneHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
                     android:layout_marginStart="15dp"
-                    android:textSize="11sp"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/Phone_profile_tag"
                     android:textColor="@color/white"
-                    android:text="@string/Phone_profile_tag"/>
+                    android:textSize="11sp" />
 
-                <TextView
-                    android:id="@+id/phoneValue"
+                <EditText
+                    android:id="@+id/phoneValue_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:textSize="18sp"
+                    android:height="48dp"
+                    android:text="@string/Phone_profile_tag"
                     android:textColor="@color/white"
-                    android:text="@string/Phone_profile_tag"/>
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -144,20 +149,20 @@
         android:id="@+id/empty_profile_space"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="4"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_editProfile"
+            android:id="@+id/btn_saveProfile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="7dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="7dp"
             android:background="@drawable/btn_custom"
             android:fontFamily="@font/roboto_regular"
-            android:text="@string/Edit_profile_str"
+            android:text="@string/saveChanges_str"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

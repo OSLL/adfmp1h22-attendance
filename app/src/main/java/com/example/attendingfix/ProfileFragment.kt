@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 
 /**
@@ -36,12 +37,18 @@ class ProfileFragment : Fragment() {
         val parentName: TextView = view.findViewById(R.id.parentNameValue)
         val email: TextView = view.findViewById(R.id.emailValue)
         val phone: TextView = view.findViewById(R.id.phoneValue)
+        val editProfileButton: Button = view.findViewById(R.id.btn_editProfile)
 
         name.text = userInfo[2]
         surname.text = userInfo[1]
         parentName.text = userInfo[3]
         email.text = userInfo[4]
         phone.text = userInfo[5]
+
+        editProfileButton.setOnClickListener {
+            val myActivity = activity as MainActivity
+            myActivity.onEditProfileButtonClicked()
+        }
     }
 
     companion object {

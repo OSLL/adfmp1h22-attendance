@@ -17,6 +17,9 @@ class ScreenFragmentManager {
                 3 -> {
                     ProfileFragment()
                 }
+                4 -> {
+                    FragmentProfileEdit()
+                }
                 else -> {
                     ProfileFragment()
                 }

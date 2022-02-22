@@ -13,6 +13,15 @@ class MainActivity : AppCompatActivity() {
 
     private var userInfo = arrayListOf<String>()
 
+    fun onEditProfileButtonClicked(){
+        navBarButtonClickHandler(4, this.supportFragmentManager)
+    }
+
+    fun onSaveProfileDataButtonClicked(data: ArrayList<String>){
+        userInfo = data
+        navBarButtonClickHandler(3, this.supportFragmentManager)
+    }
+
     fun navBarButtonClickHandler(target_id: Int, supportFragmentManager: FragmentManager){
 
         if (current_fragment != target_id) {
@@ -33,11 +42,6 @@ class MainActivity : AppCompatActivity() {
                     .commit()
             }
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
