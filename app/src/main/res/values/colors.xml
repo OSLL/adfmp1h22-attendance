@@ -13,5 +13,6 @@
     <color name="colorPrimary">#00796b</color>
     <color name="colorPrimaryDark">#00695C</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="buttonsColor">#2B7BC5</color>
+    <color name="mainDarkColor">#2B7BC5</color>
+    <color name="blue_dark">#0066CC</color>
 </resources>

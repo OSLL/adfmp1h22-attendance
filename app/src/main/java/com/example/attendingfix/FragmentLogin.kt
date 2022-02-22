@@ -1,10 +1,15 @@
 package com.example.attendingfix
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import androidx.fragment.app.Fragment
+
 
 /**
  * A simple [Fragment] subclass.
@@ -23,6 +28,18 @@ class FragmentLogin : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val loginButton: Button = view.findViewById(R.id.btn_login)
+        loginButton.setOnClickListener {
+            val data = arrayListOf("2", "Shirokov", "Kirill", "Sergeevich", "k.s@mail.ru", "+7 (777) 543-21-34")
+            val intent = Intent(this.context, MainActivity::class.java)
+            intent.putExtra("userInfo", data)
+            startActivity(intent)
+        }
     }
 
     companion object {

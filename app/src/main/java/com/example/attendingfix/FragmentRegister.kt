@@ -1,10 +1,12 @@
 package com.example.attendingfix
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 
 /**
  * A simple [Fragment] subclass.
@@ -23,6 +25,18 @@ class FragmentRegister : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_register, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val registerButton: Button = view.findViewById(R.id.btn_register)
+        registerButton.setOnClickListener {
+            val data = arrayListOf("1", "Shirokov", "Kirill", "Sergeevich", "k.sik@mail.ru", "+7 (777) 543-21-34")
+            val intent = Intent(this.context, MainActivity::class.java)
+            intent.putExtra("userInfo", data)
+            startActivity(intent)
+        }
     }
 
     companion object {

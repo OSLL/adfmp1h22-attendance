@@ -47,16 +47,16 @@ class CheckFragment : Fragment() {
             ))
         val fragmentManager: FragmentManager = this.childFragmentManager
         val currentView: View = requireView()
-        val scrollView: ScrollView = currentView.findViewById(R.id.checkScrollView)
         val checkButton: Button = currentView.findViewById(R.id.mainCheckButton)
         checkButton.isClickable = false
-        fun itemClickHandler(item: IRecyclerViewItemMapHandler){
 
+        fun enableButton(){
+            checkButton.isClickable = true
         }
 
         val recyclerView: RecyclerView = currentView.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(currentView.context)
-        val adapter = CheckRecyclerAdapter(this) { item -> itemClickHandler(item) }
+        val adapter = CheckRecyclerAdapter(this){ enableButton() }
         adapter.setItems(emulated_data["items"] ?: listOf())
         recyclerView.adapter = adapter
     }

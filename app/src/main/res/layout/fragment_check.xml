@@ -32,10 +32,11 @@
 
         <Button
             android:id="@+id/mainCheckButton"
-            style="@style/MainCheckButton"
+            android:background="@drawable/btn_custom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:textColor="@color/white"
             android:text="@string/check"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

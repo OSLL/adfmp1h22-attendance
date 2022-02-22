@@ -38,5 +38,7 @@ class LoginActivity : AppCompatActivity() {
         pagerAdapter.addFragment(FragmentLogin())
         pagerAdapter.addFragment(FragmentRegister())
         viewPager.adapter = pagerAdapter
+
+
     }
 }
