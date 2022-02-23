@@ -45,7 +45,7 @@ class CheckFragment : Fragment() {
                 IRecyclerViewItemMapHandler(7 ,mapOf("lesson" to "Math", "date" to "02.02.2022", "time" to "16:00")),
                 IRecyclerViewItemMapHandler(8 ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "time" to "17:55"))
             ))
-        val fragmentManager: FragmentManager = this.childFragmentManager
+
         val currentView: View = requireView()
         val checkButton: Button = currentView.findViewById(R.id.mainCheckButton)
         checkButton.isClickable = false

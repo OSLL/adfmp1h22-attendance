@@ -5,6 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import androidx.core.widget.doOnTextChanged
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * A simple [Fragment] subclass.
@@ -23,6 +28,39 @@ class Statistics : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_statistics, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val emulated_data: Map<String, List<IRecyclerViewItemMapHandler>> =
+            mapOf("items" to listOf(
+                IRecyclerViewItemMapHandler(0, mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "Was on lesson")),
+                IRecyclerViewItemMapHandler(1 ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "Not present")),
+                IRecyclerViewItemMapHandler(2 ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "Was on lesson")),
+                IRecyclerViewItemMapHandler(3 ,mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "Not present")),
+                IRecyclerViewItemMapHandler(4 ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "Was on lesson")),
+                IRecyclerViewItemMapHandler(5 ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "Not present")),
+                IRecyclerViewItemMapHandler(6 ,mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "Was on lesson")),
+                IRecyclerViewItemMapHandler(7 ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "Was on lesson")),
+                IRecyclerViewItemMapHandler(8 ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "Was on lesson"))
+            ))
+
+        val currentView: View = requireView()
+
+        val recyclerView: RecyclerView = currentView.findViewById(R.id.stat_recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(currentView.context)
+        val adapter = StatisticRecyclerAdapter(this, R.layout.fragment_statistic_view_student_lesson_item)
+        adapter.setItems(requireContext(), emulated_data["items"] ?: listOf())
+        recyclerView.adapter = adapter
+
+        fun handleOnTextChange(text: CharSequence?, start: Int, before: Int, count: Int){
+            var fil = adapter.getFilter()
+            return fil!!.filter(text)
+        }
+
+        val searchEditText: EditText = currentView.findViewById(R.id.filter_editText)
+        searchEditText.doOnTextChanged { text, start, before, count -> handleOnTextChange(text, start, before, count) }
     }
 
     companion object {

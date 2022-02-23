@@ -35,7 +35,7 @@ class FragmentLogin : Fragment() {
 
         val loginButton: Button = view.findViewById(R.id.btn_login)
         loginButton.setOnClickListener {
-            val data = arrayListOf("2", "Shirokov", "Kirill", "Sergeevich", "k.s@mail.ru", "+7 (777) 543-21-34")
+            val data = arrayListOf("2", "Shirokov", "Kirill", "Sergeevich", "k.s@mail.ru", "+7 (777) 543-21-34", "Student")
             val intent = Intent(this.context, MainActivity::class.java)
             intent.putExtra("userInfo", data)
             startActivity(intent)

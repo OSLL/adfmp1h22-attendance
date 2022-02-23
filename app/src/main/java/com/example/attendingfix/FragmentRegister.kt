@@ -32,7 +32,7 @@ class FragmentRegister : Fragment() {
 
         val registerButton: Button = view.findViewById(R.id.btn_register)
         registerButton.setOnClickListener {
-            val data = arrayListOf("1", "Shirokov", "Kirill", "Sergeevich", "k.sik@mail.ru", "+7 (777) 543-21-34")
+            val data = arrayListOf("1", "Shirokov", "Kirill", "Sergeevich", "k.sik@mail.ru", "+7 (777) 543-21-34", "Teacher")
             val intent = Intent(this.context, MainActivity::class.java)
             intent.putExtra("userInfo", data)
             startActivity(intent)
