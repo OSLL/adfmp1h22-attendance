@@ -29,4 +29,5 @@
     <string name="Edit_profile_str">Редактировать профиль</string>
     <string name="saveChanges_str">Сохранить изменения</string>
     <string name="takeall">взять всё</string>
+    <string name="export_pdf">Export PDF</string>
 </resources>

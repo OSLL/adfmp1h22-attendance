@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 
 
@@ -53,13 +54,20 @@ class MainActivity : AppCompatActivity() {
         val btn_stats: Button = findViewById(R.id.stats)
         val btn_check: Button = findViewById(R.id.check)
         val btn_profile: Button = findViewById(R.id.profile)
+        val btn_export: Button = findViewById(R.id.export_Button)
+        val title_text: TextView = findViewById(R.id.header_title)
         val supportFragmentManager = this.supportFragmentManager
 
         supportFragmentManager.beginTransaction()
             .add(R.id.screen_fragment, ScreenFragmentManager.newInstance(current_fragment), "MainFragment")
             .commit()
 
+        btn_export.isClickable = false
+        title_text.text = getString(R.string.sign)
+
         btn_stats.setOnClickListener{
+            btn_export.isClickable = true
+            title_text.text = getString(R.string.stats)
             var target_id = 1
             if(userInfo[6] == "Teacher"){
                 target_id = 5
@@ -69,11 +77,15 @@ class MainActivity : AppCompatActivity() {
 
         btn_check.setOnClickListener {
             val target_id = 2
+            btn_export.isClickable = false
+            title_text.text = getString(R.string.sign)
             navBarButtonClickHandler(target_id, supportFragmentManager)
         }
 
         btn_profile.setOnClickListener {
             val target_id = 3
+            btn_export.isClickable = false
+            title_text.text = getString(R.string.profile)
             navBarButtonClickHandler(target_id, supportFragmentManager)
         }
     }
