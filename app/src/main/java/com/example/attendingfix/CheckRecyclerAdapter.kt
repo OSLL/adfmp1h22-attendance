@@ -14,6 +14,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import java.util.function.Function
 
 interface IRecyclerViewItem<T> {
     val id: Int
@@ -39,17 +40,26 @@ fun <T : IRecyclerViewItem<Map<String, String>>> handleSelection(
     view.setBackgroundColor(ContextCompat.getColor(view.context, color))
 }
 
-class SelectionHelper<T : IRecyclerViewItem<Map<String, String>>> : ISelectionHelper<T>() {
+class SelectionHelper<T : IRecyclerViewItem<Map<String, String>>>(private val onClick: (() -> Unit)?) : ISelectionHelper<T>() {
     //Мапа со всеми выбранными элементами
     private val selectedItems = mutableMapOf<Int, T>()
+    private var clickState = false
 
     //Обработка итема, если он уже выбран - убираем его, иначе - наоборот
     override fun handleItem(item: T) {
         if (selectedItems[item.id] == null) {
             selectedItems.clear()
             selectedItems[item.id] = item
+            if(!clickState){
+                onClick?.invoke()
+                clickState = !clickState
+            }
         } else {
             selectedItems.remove(item.id)
+            if(clickState){
+                onClick?.invoke()
+                clickState = !clickState
+            }
         }
         notifyChange()
     }
@@ -70,10 +80,10 @@ abstract class ISelectionHelper<T : IRecyclerViewItem<Map<String, String>>> : Ba
 
 class CheckRecyclerAdapter(
     private val lifecycleOwner: LifecycleOwner,
-    private val onClick: ((IRecyclerViewItemMapHandler) -> Unit)? = null
+    private val onClick: (() -> Unit)? = null
 ) : RecyclerView.Adapter<CheckRecyclerAdapter.ViewHolder>() {
     private val items = mutableListOf<IRecyclerViewItemMapHandler>()
-    private val selectionHelper: SelectionHelper<IRecyclerViewItemMapHandler> = SelectionHelper()
+    private val selectionHelper: SelectionHelper<IRecyclerViewItemMapHandler> = SelectionHelper(onClick)
     private val itemBindingId: Int? = 1
     @LayoutRes private val layoutRes: Int = R.layout.fragment_check_view_item
 
@@ -118,7 +128,6 @@ class CheckRecyclerAdapter(
                 root.setOnClickListener {
                     //Вызываем обработку элемента
                     selectionHelper.handleItem(item)
-                    onClick?.invoke(item)
                 }
                 lifecycleOwner = this@CheckRecyclerAdapter.lifecycleOwner
             }

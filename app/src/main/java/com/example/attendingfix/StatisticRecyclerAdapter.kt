@@ -17,6 +17,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
+import java.util.function.BiFunction
 import kotlin.collections.ArrayList
 
 
@@ -59,6 +60,8 @@ fun <T : IRecyclerViewItem<Map<String, String>>> handleStatisticSelection(
 
 class StatisticRecyclerAdapter(
     private val lifecycleOwner: LifecycleOwner,
+    private val filterRule: BiFunction<IRecyclerViewItemMapHandler, String, Boolean>,
+    private val onBindHandler: (ViewDataBinding, IRecyclerViewItemMapHandler, TextView, TextView, TextView) -> Unit,
     @LayoutRes private val layoutRes: Int
 ) : RecyclerView.Adapter<StatisticRecyclerAdapter.ViewHolder>(), Filterable{
     private var items = mutableListOf<IRecyclerViewItemMapHandler>()
@@ -70,7 +73,7 @@ class StatisticRecyclerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, layoutRes, parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding, onBindHandler)
     }
 
     override fun getItemCount(): Int = visibleItems.size
@@ -133,7 +136,7 @@ class StatisticRecyclerAdapter(
                     filteredList.addAll(items)
                 } else {
                     for (item in items) {
-                        if (item.data["lesson"]?.lowercase()?.contains(charString.lowercase()) ?: false) {
+                        if (filterRule.apply(item, charString)) {
                             filteredList.add(item)
                         }
                     }
@@ -158,19 +161,17 @@ class StatisticRecyclerAdapter(
     }
 
     inner class ViewHolder(
-        private val binding: ViewDataBinding
+        private val binding: ViewDataBinding,
+        private val onBindHandler: (ViewDataBinding, IRecyclerViewItemMapHandler, TextView, TextView, TextView) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        val lesson: TextView = binding.root.findViewById(R.id.statTextViewLesson)
-        val date: TextView = binding.root.findViewById(R.id.statTextViewDate)
-        val attendance: TextView = binding.root.findViewById(R.id.statTextViewAttendance)
+        val text1: TextView = binding.root.findViewById(R.id.statTextViewLesson)
+        val text2: TextView = binding.root.findViewById(R.id.statTextViewDate)
+        val text3: TextView = binding.root.findViewById(R.id.statTextViewAttendance)
 
         fun onBind(item: IRecyclerViewItemMapHandler) {
+            onBindHandler(binding, item, text1, text2, text3)
             binding.apply {
-                lesson.text = item.data["lesson"]
-                date.text = item.data["date"]
-                attendance.text = item.data["attendance"]
-
                 //Установка переменных
                 setVariable(itemBindingId ?: BR.item, item)
                 setVariable(BR.selectionHelper, selectionHelper)

@@ -20,6 +20,9 @@ class ScreenFragmentManager {
                 4 -> {
                     FragmentProfileEdit()
                 }
+                5 -> {
+                    TeacherStatisticsFragment()
+                }
                 else -> {
                     ProfileFragment()
                 }

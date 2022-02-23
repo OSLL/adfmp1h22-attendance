@@ -28,4 +28,5 @@
     <string name="Email_profile_tag">email</string>
     <string name="Edit_profile_str">Редактировать профиль</string>
     <string name="saveChanges_str">Сохранить изменения</string>
+    <string name="takeall">взять всё</string>
 </resources>

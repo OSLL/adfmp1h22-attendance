@@ -60,7 +60,10 @@ class MainActivity : AppCompatActivity() {
             .commit()
 
         btn_stats.setOnClickListener{
-            val target_id = 1
+            var target_id = 1
+            if(userInfo[6] == "Teacher"){
+                target_id = 5
+            }
             navBarButtonClickHandler(target_id, supportFragmentManager)
         }
 

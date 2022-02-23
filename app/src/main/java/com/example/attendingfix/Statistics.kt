@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.core.widget.doOnTextChanged
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -48,9 +50,29 @@ class Statistics : Fragment() {
 
         val currentView: View = requireView()
 
+        fun lessonsBindFunction(binding: ViewDataBinding,
+                                item: IRecyclerViewItemMapHandler,
+                                text1: TextView,
+                                text2: TextView,
+                                text3: TextView
+        ){
+            binding.apply {
+                text1.text = item.data["lesson"]
+                text2.text = item.data["date"]
+                text3.text = item.data["attendance"]
+            }
+        }
+
+        fun filterRule(item: IRecyclerViewItemMapHandler, str: String): Boolean {
+            return item.data["lesson"]?.lowercase()?.contains(str.lowercase()) ?: false
+        }
+
         val recyclerView: RecyclerView = currentView.findViewById(R.id.stat_recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(currentView.context)
-        val adapter = StatisticRecyclerAdapter(this, R.layout.fragment_statistic_view_student_lesson_item)
+        val adapter = StatisticRecyclerAdapter(this,
+            {item, str -> filterRule(item, str)},
+            {binding, item, text1, text2, text3 -> lessonsBindFunction(binding, item, text1, text2, text3)},
+            R.layout.fragment_statistic_view_student_lesson_item)
         adapter.setItems(requireContext(), emulated_data["items"] ?: listOf())
         recyclerView.adapter = adapter
 
