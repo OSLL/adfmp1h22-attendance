@@ -70,31 +70,43 @@ class FragmentRegister : Fragment() {
                         password.setText("")
                         rePassword.setText("")
                         val reqBody = json.toString().toRequestBody(JSON)
-                        val request = Request.Builder().url("http://10.0.2.2:3001/users").post(reqBody).build()
+                        val request = Request.Builder().url("http://10.0.2.2:3001/users/register").post(reqBody).build()
                         val thread = Thread {
                             run() {
                                 try {
                                     val response: Response = httpClient.newCall(request).execute()
-                                    val reqData = JSONObject(response.body!!.string())
-                                    Log.d("response", "DONE")
-                                    val intent = Intent(context, MainActivity::class.java)
-                                    val data = arrayListOf(
-                                        reqData.get("id"),
-                                        reqData.get("lastname"),
-                                        reqData.get("firstname"),
-                                        reqData.get("secondname"),
-                                        reqData.get("email"),
-                                        reqData.get("telnum"),
-                                        reqData.get("status")
-                                    )
-                                    intent.putExtra("userInfo", data)
-                                    startActivity(intent)
+                                    val code = response.code
+                                    if(code == 201) {
+                                        val reqData = JSONObject(response.body!!.string())
+                                        Log.d("response", "DONE")
+                                        val intent = Intent(context, MainActivity::class.java)
+                                        val data = arrayListOf(
+                                            reqData.get("id"),
+                                            reqData.get("lastname"),
+                                            reqData.get("firstname"),
+                                            reqData.get("secondname"),
+                                            reqData.get("email"),
+                                            reqData.get("telnum"),
+                                            reqData.get("status")
+                                        )
+                                        intent.putExtra("userInfo", data)
+                                        startActivity(intent)
+                                    } else if(code == 400){
+                                        Log.d("response", "Already exists")
+                                        requireActivity().runOnUiThread {
+                                            Toast.makeText(
+                                                activity,
+                                                "Account with this email already exists!",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                        }
+                                    }
                                 } catch (e: Exception) {
                                     Log.d("response", e.toString())
                                     requireActivity().runOnUiThread {
                                         Toast.makeText(
                                             activity,
-                                            "Please enter correct data beach!",
+                                            "Please enter correct data!",
                                             Toast.LENGTH_LONG
                                         ).show()
                                     }

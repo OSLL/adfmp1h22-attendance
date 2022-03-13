@@ -18,8 +18,7 @@ app.use(express.json())
 
 const TEACHERS = ['ks@mail.ru']
 
-app.post('/users', (req, res) => {
-    console.log("Yes")
+app.post('/users/register', (req, res) => {
     data = req.body
     console.log(data)
     if(Users.filter(user => user.email === data.email).length === 0){
@@ -45,6 +44,23 @@ app.post('/users', (req, res) => {
                 res.send(JSON.stringify(newUser))
             }
         })
+    } else {
+        res.status(400)
+    }
+    res.status(403)
+})
+
+app.post('/users/login', (req, res) => {
+    data = req.body
+    console.log(data)
+    if(Users.filter(user => user.email === data.email).length !== 0){
+        user = Users.filter(user => user.email === data.email)[0]
+        if(user.password === data.password){
+            res.status(200)
+            res.send(JSON.stringify(user))
+        } else {
+            res.status(403)
+        }
     }
     res.status(403)
 })
