@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import okhttp3.OkHttpClient
 
 
 /**
@@ -17,6 +18,8 @@ import androidx.fragment.app.Fragment
  * create an instance of this fragment.
  */
 class FragmentLogin : Fragment() {
+
+    val httpClient = OkHttpClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
