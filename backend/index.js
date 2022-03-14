@@ -23,7 +23,7 @@ app.post('/users/register', (req, res) => {
     console.log(data)
     if(Users.filter(user => user.email === data.email).length === 0){
         const newUser = {
-            id: Users.length,
+            id: `${Users.length}`,
             email: data.email,
             password: data.password,
             firstname: data.firstname,
@@ -48,6 +48,37 @@ app.post('/users/register', (req, res) => {
         res.status(400)
     }
     res.status(403)
+})
+
+app.post('/users/modify', (req, res) => {
+    data = req.body
+    console.log(data)
+    if(Users.filter(user => user.email === data.email).length === 0){
+        Users.forEach(element => {
+            if(element.id == data.id){
+                element.surname = data.surname
+                element.firstname = data.firstname
+                element.secondname = data.secondname
+                element.email = data.email
+                element.telnum = data.telnum
+                element.status = TEACHERS.includes(data.email) ? "Teacher" : "Student"
+                fs.writeFile('./database/users.json', JSON.stringify(Users, null, 4), 'utf8', (err) => {
+                    if(err){
+                        console.log(err)
+                        console.log("Error writing to users.json")
+                        res.status(500)
+                    } else {
+                        res.status(202)
+                        res.send(JSON.stringify(element))
+                    }
+                })
+            } else {
+                res.send(400)
+            }
+        })
+    } else {
+        res.send(400)
+    }
 })
 
 app.post('/users/login', (req, res) => {

@@ -1,16 +1,27 @@
 package com.example.attendingfix
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import org.json.JSONObject
 
 
 class MainActivity : AppCompatActivity() {
 
     var current_fragment: Int = 2
+
+    val httpClient = OkHttpClient()
 
     private var userInfo = arrayListOf<String>()
 
@@ -19,8 +30,66 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onSaveProfileDataButtonClicked(data: ArrayList<String>){
-        userInfo = data
-        navBarButtonClickHandler(3, this.supportFragmentManager)
+
+        val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
+
+        if(data[4].isNotEmpty() &&
+                data[1].isNotEmpty() &&
+                data[2].isNotEmpty() &&
+                data[3].isNotEmpty() &&
+                data[5].isNotEmpty()){
+            val json = JSONObject()
+            json.put("email", data[4])
+                .put("firstname", data[2])
+                .put("id", data[0])
+                .put("lastname", data[1])
+                .put("secondname", data[3])
+                .put("telnum", data[5])
+            val reqBody = json.toString().toRequestBody(JSON)
+            val request = Request.Builder().url("http://10.0.2.2:3001/users/modify").post(reqBody).build()
+            val thread = Thread {
+                run() {
+                    try {
+                        val response: Response = httpClient.newCall(request).execute()
+                        val code = response.code
+                        if(code == 202) {
+                            val reqData = JSONObject(response.body!!.string())
+                            Log.d("response", "DONE")
+                            val newData = arrayListOf(
+                                reqData.get("id").toString(),
+                                reqData.get("lastname").toString(),
+                                reqData.get("firstname").toString(),
+                                reqData.get("secondname").toString(),
+                                reqData.get("email").toString(),
+                                reqData.get("telnum").toString(),
+                                reqData.get("status").toString()
+                            )
+                            userInfo = newData
+                            navBarButtonClickHandler(3, this.supportFragmentManager)
+                        } else {
+                            Log.d("response", "response code: " + code)
+                            this.runOnUiThread {
+                                Toast.makeText(
+                                    this,
+                                    "Please modify with correct data!",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.d("response", e.toString())
+                        this.runOnUiThread {
+                            Toast.makeText(
+                                this,
+                                "Please modify with correct data!",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                }
+            }
+            thread.start()
+        }
     }
 
     fun navBarButtonClickHandler(target_id: Int, supportFragmentManager: FragmentManager){
