@@ -76,7 +76,8 @@ class FragmentLogin : Fragment() {
                                     reqData.get("secondname"),
                                     reqData.get("email"),
                                     reqData.get("telnum"),
-                                    reqData.get("status")
+                                    reqData.get("status"),
+                                    reqData.get("group")
                                 )
                                 intent.putExtra("userInfo", data)
                                 startActivity(intent)

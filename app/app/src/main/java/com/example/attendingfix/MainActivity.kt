@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     val httpClient = OkHttpClient()
 
-    private var userInfo = arrayListOf<String>()
+    var userInfo = arrayListOf<String>()
 
     fun onEditProfileButtonClicked(){
         navBarButtonClickHandler(4, this.supportFragmentManager)
@@ -90,6 +90,12 @@ class MainActivity : AppCompatActivity() {
             }
             thread.start()
         }
+    }
+
+    fun onCheckItemsClickHandler(l: List<IRecyclerViewItemMapHandler>){
+        val lessonId = l[0].id
+        val lessonData = l[0].data
+
     }
 
     fun navBarButtonClickHandler(target_id: Int, supportFragmentManager: FragmentManager){

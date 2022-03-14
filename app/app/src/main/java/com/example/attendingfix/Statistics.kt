@@ -37,15 +37,15 @@ class Statistics : Fragment() {
 
         val emulated_data: Map<String, List<IRecyclerViewItemMapHandler>> =
             mapOf("items" to listOf(
-                IRecyclerViewItemMapHandler(0, mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "Was on lesson")),
-                IRecyclerViewItemMapHandler(1 ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "Not present")),
-                IRecyclerViewItemMapHandler(2 ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "Was on lesson")),
-                IRecyclerViewItemMapHandler(3 ,mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "Not present")),
-                IRecyclerViewItemMapHandler(4 ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "Was on lesson")),
-                IRecyclerViewItemMapHandler(5 ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "Not present")),
-                IRecyclerViewItemMapHandler(6 ,mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "Was on lesson")),
-                IRecyclerViewItemMapHandler(7 ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "Was on lesson")),
-                IRecyclerViewItemMapHandler(8 ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "Was on lesson"))
+                IRecyclerViewItemMapHandler("0", mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "Was on lesson")),
+                IRecyclerViewItemMapHandler("1" ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "Not present")),
+                IRecyclerViewItemMapHandler("2" ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "Was on lesson")),
+                IRecyclerViewItemMapHandler("3" ,mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "Not present")),
+                IRecyclerViewItemMapHandler("4" ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "Was on lesson")),
+                IRecyclerViewItemMapHandler("5" ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "Not present")),
+                IRecyclerViewItemMapHandler("6" ,mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "Was on lesson")),
+                IRecyclerViewItemMapHandler("7" ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "Was on lesson")),
+                IRecyclerViewItemMapHandler("8" ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "Was on lesson"))
             ))
 
         val currentView: View = requireView()

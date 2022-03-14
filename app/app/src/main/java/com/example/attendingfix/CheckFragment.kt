@@ -1,15 +1,24 @@
 package com.example.attendingfix
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ScrollView
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import okhttp3.internal.wait
+import org.json.JSONArray
+import org.json.JSONObject
 
 /**
  * A simple [Fragment] subclass.
@@ -32,33 +41,74 @@ class CheckFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         //val data = получение данных с сервера
-        val emulated_data: Map<String, List<IRecyclerViewItemMapHandler>> =
-            mapOf("items" to listOf(
-                IRecyclerViewItemMapHandler(0, mapOf("lesson" to "Android", "date" to "02.02.2022", "time" to "14:20")),
-                IRecyclerViewItemMapHandler(1 ,mapOf("lesson" to "Math", "date" to "02.02.2022", "time" to "16:00")),
-                IRecyclerViewItemMapHandler(2 ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "time" to "17:55")),
-                IRecyclerViewItemMapHandler(3 ,mapOf("lesson" to "Android", "date" to "02.02.2022", "time" to "14:20")),
-                IRecyclerViewItemMapHandler(4 ,mapOf("lesson" to "Math", "date" to "02.02.2022", "time" to "16:00")),
-                IRecyclerViewItemMapHandler(5 ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "time" to "17:55")),
-                IRecyclerViewItemMapHandler(6 ,mapOf("lesson" to "Android", "date" to "02.02.2022", "time" to "14:20")),
-                IRecyclerViewItemMapHandler(7 ,mapOf("lesson" to "Math", "date" to "02.02.2022", "time" to "16:00")),
-                IRecyclerViewItemMapHandler(8 ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "time" to "17:55"))
-            ))
 
         val currentView: View = requireView()
         val checkButton: Button = currentView.findViewById(R.id.mainCheckButton)
-        checkButton.isClickable = false
 
         fun toggleButton(){
             checkButton.isClickable = !checkButton.isClickable
         }
 
-        val recyclerView: RecyclerView = currentView.findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(currentView.context)
+        val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
+
+        val myActivity = activity as MainActivity
+
         val adapter = CheckRecyclerAdapter(this){ toggleButton() }
-        adapter.setItems(emulated_data["items"] ?: listOf())
-        recyclerView.adapter = adapter
+
+        val request = Request.Builder().url("http://10.0.2.2:3001/lessons/${myActivity.userInfo[7]}/${myActivity.userInfo[0]}").build()
+        val newData = mutableListOf<IRecyclerViewItemMapHandler>()
+        val thread = Thread {
+            run() {
+                try {
+                    val response: Response = myActivity.httpClient.newCall(request).execute()
+                    val code = response.code
+                    if(code == 200) {
+                        val reqData = JSONArray(response.body!!.string())
+                        Log.d("response", "DONE")
+                        for( i in 0 until reqData.length()){
+                            val lessonObj = reqData.getJSONObject(i)
+                            newData.add(IRecyclerViewItemMapHandler(lessonObj.get("id").toString(),
+                                mapOf("lesson" to lessonObj.get("name").toString(),
+                                      "date" to lessonObj.get("date").toString(),
+                                      "time" to lessonObj.get("time").toString())))
+                        }
+                        myActivity.runOnUiThread {
+                            val recyclerView: RecyclerView = currentView.findViewById(R.id.recyclerView)
+                            recyclerView.layoutManager = LinearLayoutManager(currentView.context)
+                            adapter.setItems(newData)
+                            recyclerView.adapter = adapter
+                        }
+                    } else {
+                        Log.d("response", "response code: " + code)
+                        myActivity.runOnUiThread {
+                            Toast.makeText(
+                                myActivity,
+                                "Please modify with correct data!",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.d("response", e.toString())
+                    myActivity.runOnUiThread {
+                        Toast.makeText(
+                            myActivity,
+                            "Please modify with correct data!",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+        }
+        thread.start()
+
+        checkButton.setOnClickListener {
+            myActivity.onCheckItemsClickHandler(adapter.getSelectedItems())
+        }
+
+        checkButton.isClickable = false
     }
 
     companion object {

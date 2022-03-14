@@ -17,20 +17,20 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.function.Function
 
 interface IRecyclerViewItem<T> {
-    val id: Int
+    val id: String
     val data: T
 }
 
-class IRecyclerViewItemMapHandler(override val id: Int = 0, override val data: Map<String, String>): IRecyclerViewItem<Map<String, String>>
+class IRecyclerViewItemMapHandler(override val id: String = "0", override val data: Map<String, String>): IRecyclerViewItem<Map<String, String>>
 
 @BindingAdapter("selection_helper", "item_id", requireAll = true)
 fun <T : IRecyclerViewItem<Map<String, String>>> handleSelection(
     view: View,
     selectionHelper: ISelectionHelper<T>,
-    itemId: Int
+    itemId: String
 ) {
     //Смотрим текущее состояние итема
-    val isSelected = selectionHelper.isSelected(itemId)
+    val isSelected = selectionHelper.isSelected(itemId.toInt())
     //Выбираем цвет в зависимости от состояния
     val color = if (isSelected) {
         R.color.checkCardColorPressed
@@ -42,7 +42,7 @@ fun <T : IRecyclerViewItem<Map<String, String>>> handleSelection(
 
 class SelectionHelper<T : IRecyclerViewItem<Map<String, String>>>(private val onClick: (() -> Unit)?) : ISelectionHelper<T>() {
     //Мапа со всеми выбранными элементами
-    private val selectedItems = mutableMapOf<Int, T>()
+    private val selectedItems = mutableMapOf<String, T>()
     private var clickState = false
 
     //Обработка итема, если он уже выбран - убираем его, иначе - наоборот
@@ -64,7 +64,8 @@ class SelectionHelper<T : IRecyclerViewItem<Map<String, String>>>(private val on
         notifyChange()
     }
 
-    override fun isSelected(id: Int): Boolean = selectedItems.containsKey(id)
+    fun isSelectedStr(id: String): Boolean = selectedItems.containsKey(id)
+    override fun isSelected(id: Int): Boolean = isSelectedStr("${id}")
     override fun getSelectedItems(): List<T> = selectedItems.values.toList()
     override fun getSelectedItemsSize(): Int = selectedItems.size
 }
@@ -108,6 +109,10 @@ class CheckRecyclerAdapter(
             addAll(newItems)
         }
         diffResult.dispatchUpdatesTo(this)
+    }
+
+    fun getSelectedItems(): List<IRecyclerViewItemMapHandler>{
+        return selectionHelper.getSelectedItems()
     }
 
     inner class ViewHolder(

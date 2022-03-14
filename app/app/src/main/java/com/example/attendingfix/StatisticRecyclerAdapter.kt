@@ -27,10 +27,10 @@ class StatsSelectionHelper<T : IRecyclerViewItem<Map<String, String>>> : ISelect
 
     //Обработка итема, если он уже выбран - убираем его, иначе - наоборот
     override fun handleItem(item: T) {
-        if (selectedItems[item.id] == null) {
-            selectedItems[item.id] = item
+        if (selectedItems[item.id.toInt()] == null) {
+            selectedItems[item.id.toInt()] = item
         } else {
-            selectedItems.remove(item.id)
+            selectedItems.remove(item.id.toInt())
         }
         notifyChange()
     }
@@ -45,10 +45,10 @@ class StatsSelectionHelper<T : IRecyclerViewItem<Map<String, String>>> : ISelect
 fun <T : IRecyclerViewItem<Map<String, String>>> handleStatisticSelection(
     view: View,
     selectionHelper: ISelectionHelper<T>,
-    itemId: Int
+    itemId: String
 ) {
     //Смотрим текущее состояние итема
-    val isSelected = selectionHelper.isSelected(itemId)
+    val isSelected = selectionHelper.isSelected(itemId.toInt())
     //Выбираем цвет в зависимости от состояния
     val color = if (isSelected) {
         R.color.checkCardColorPressed
@@ -67,7 +67,7 @@ class StatisticRecyclerAdapter(
     private var items = mutableListOf<IRecyclerViewItemMapHandler>()
     private var visibleItems = mutableListOf<IRecyclerViewItemMapHandler>()
     private val selectionHelper: StatsSelectionHelper<IRecyclerViewItemMapHandler> = StatsSelectionHelper()
-    private val itemBindingId: Int? = 1
+    private val itemBindingId: String = "1"
     private var context: Context? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -173,7 +173,7 @@ class StatisticRecyclerAdapter(
             onBindHandler(binding, item, text1, text2, text3)
             binding.apply {
                 //Установка переменных
-                setVariable(itemBindingId ?: BR.item, item)
+                setVariable(BR.item, item)
                 setVariable(BR.selectionHelper, selectionHelper)
 
                 root.setOnClickListener {
