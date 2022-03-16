@@ -135,17 +135,23 @@ app.get('/lessons/:group/:userId', (req, res) => {
     res.send(JSON.stringify(lessonsDif))
 })
 
-function checkCoords(data, lessonId) {
-    return true
+function checkCoords(data, lesson) {
+    if(Math.abs(lesson.position.x - data.positionX) < 100 && Math.abs(lesson.position.y - data.positionY) < 100) {
+        return true
+    }
+    return false
 }
 
 app.post('/lessons/check/:lessonId/:userId', (req, res) => {
     lessonId = req.params.lessonId
     userId = req.params.userId
     data = req.body
-    if(Lessons.filter(lesson => lesson.id === lessonId).length > 0 &&
+    console.log(data.positionX)
+    console.log(data.positionY)
+    lessons = Lessons.filter(lesson => lesson.id === lessonId)
+    if(lessons.length > 0 &&
         Users.filter(user => user.id === userId).length > 0){
-            if(checkCoords(data, lessonId)){
+            if(checkCoords(data, lessons[0])){
                 Checks.push({
                     id: `${Checks.length}`,
                     lessonId: lessonId,
