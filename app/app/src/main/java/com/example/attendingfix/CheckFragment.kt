@@ -105,7 +105,8 @@ class CheckFragment : Fragment() {
         thread.start()
 
         checkButton.setOnClickListener {
-            myActivity.onCheckItemsClickHandler(adapter.getSelectedItems())
+            val item = adapter.getSelectedItems()[0]
+            myActivity.onCheckItemsClickHandler(adapter.getSelectedItems()) { adapter.remove(item) }
         }
 
         checkButton.isClickable = false

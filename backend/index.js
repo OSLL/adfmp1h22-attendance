@@ -157,6 +157,7 @@ app.post('/lessons/check/:lessonId/:userId', (req, res) => {
                         res.status(500)
                     } else {
                         res.status(201)
+                        res.send(JSON.stringify({}))
                     }
                 })
             } else {

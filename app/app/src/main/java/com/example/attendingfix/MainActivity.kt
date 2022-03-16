@@ -3,6 +3,7 @@ package com.example.attendingfix
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.NetworkOnMainThreadException
 import android.os.PersistableBundle
 import android.util.Log
 import android.widget.Button
@@ -92,10 +93,47 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun onCheckItemsClickHandler(l: List<IRecyclerViewItemMapHandler>){
+    fun onCheckItemsClickHandler(l: List<IRecyclerViewItemMapHandler>, callback: () -> Unit){
         val lessonId = l[0].id
         val lessonData = l[0].data
 
+        val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
+        val json = JSONObject()
+
+        val reqBody = json.toString().toRequestBody(JSON)
+        val request = Request.Builder().url("http://10.0.2.2:3001/lessons/check/${lessonId}/${userInfo[0]}").post(reqBody).build()
+        val thread = Thread {
+            run() {
+                try {
+                    val response: Response = httpClient.newCall(request).execute()
+                    val code = response.code
+                    if(code == 201) {
+                        this.runOnUiThread{
+                            callback()
+                        }
+                    } else {
+                        Log.d("response", "response code: " + code)
+                        this.runOnUiThread {
+                            Toast.makeText(
+                                this,
+                                "Internal error on server, please try later!",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                } catch (e: NetworkOnMainThreadException) {
+                    Log.d("response", e.toString())
+                    this.runOnUiThread {
+                        Toast.makeText(
+                            this,
+                            "Internal error on server, please try later!",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+        }
+        thread.start()
     }
 
     fun navBarButtonClickHandler(target_id: Int, supportFragmentManager: FragmentManager){

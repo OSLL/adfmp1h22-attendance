@@ -3,7 +3,6 @@ package com.example.attendingfix
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
@@ -14,7 +13,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import java.util.function.Function
 
 interface IRecyclerViewItem<T> {
     val id: String
@@ -109,6 +107,14 @@ class CheckRecyclerAdapter(
             addAll(newItems)
         }
         diffResult.dispatchUpdatesTo(this)
+    }
+
+    fun remove(lesson: IRecyclerViewItemMapHandler) {
+        val index = items.indexOf(lesson)
+        items.removeAt(index)
+        notifyItemRemoved(index)
+        notifyItemRangeChanged(index, items.size)
+        selectionHelper.handleItem(lesson)
     }
 
     fun getSelectedItems(): List<IRecyclerViewItemMapHandler>{
