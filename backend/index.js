@@ -11,7 +11,6 @@ const app = express()
 
 function logger(req, res, next) {
     console.log(`[${Date.now()}] ${req.method} ${req.url}`)
-    console.log("No")
     next()
 }
 
@@ -40,16 +39,14 @@ app.post('/users/register', (req, res) => {
             if(err){
                 console.log(err)
                 console.log("Error writing to users.json")
-                res.status(500)
+                res.send(JSON.stringify({status: "Internal server error"}))
             } else {
-                res.status(201)
-                res.send(JSON.stringify(newUser))
+                res.send(JSON.stringify({status: "true", data: newUser}))
             }
         })
     } else {
-        res.status(400)
+        res.send(JSON.stringify({status: "This email already registered"}))
     }
-    res.status(403)
 })
 
 app.post('/users/modify', (req, res) => {
@@ -68,18 +65,21 @@ app.post('/users/modify', (req, res) => {
                     if(err){
                         console.log(err)
                         console.log("Error writing to users.json")
-                        res.status(500)
+                        res.status(200)
+                        res.send(JSON.stringify({status: "Internal server error"}))
                     } else {
-                        res.status(202)
-                        res.send(JSON.stringify(element))
+                        res.status(200)
+                        res.send(JSON.stringify({status: "true", data: element}))
                     }
                 })
             } else {
-                res.send(400)
+                res.status(200)
+                res.send(JSON.stringify({status: "You don't have permission to change this data"}))
             }
         })
     } else {
-        res.send(400)
+        res.status(200)
+        res.send(JSON.stringify({status: "There already exists user with such email"}))
     }
 })
 
@@ -90,12 +90,14 @@ app.post('/users/login', (req, res) => {
         user = Users.filter(user => user.email === data.email)[0]
         if(user.password === data.password){
             res.status(200)
-            res.send(JSON.stringify(user))
+            res.send(JSON.stringify({status: "true", data: user}))
         } else {
-            res.status(403)
+            res.status(200)
+            res.send(JSON.stringify({status: "Incorrect password for this email"}))
         }
     }
-    res.status(403)
+    res.status(200)
+    res.send({status: "There is no user with such email"})
 })
 
 app.post('/lessons/add', (req, res) => {
@@ -116,10 +118,11 @@ app.post('/lessons/add', (req, res) => {
         if(err){
             console.log(err)
             console.log("Error writing to lessons.json")
-            res.status(500)
+            res.status(200)
+            res.send(JSON.stringify({status: "Internal server error"}))
         } else {
-            res.status(202)
-            res.send(JSON.stringify(newLesson))
+            res.status(200)
+            res.send(JSON.stringify({status: "true", data: newLesson}))
         }
     })
 })
@@ -131,8 +134,7 @@ app.get('/lessons/:group/:userId', (req, res) => {
     const lessonsChecked = Checks.filter(check => check.userId === userId)
         .map(check => check.lessonId)
     const lessonsDif = lessons.filter(lesson => !lessonsChecked.includes(lesson.id))
-    res.status(200)
-    res.send(JSON.stringify(lessonsDif))
+    res.send(JSON.stringify({status: "true", data: lessonsDif}))
 })
 
 function checkCoords(data, lesson) {
@@ -160,17 +162,20 @@ app.post('/lessons/check/:lessonId/:userId', (req, res) => {
                 fs.writeFile('./database/checks.json', JSON.stringify(Checks, null, 4), 'utf8', (err) => {
                     if(err){
                         console.log("Error writing to checks.json")
-                        res.status(500)
+                        res.status(200)
+                        res.send(JSON.stringify({status: "Internal server error"}))
                     } else {
-                        res.status(201)
-                        res.send(JSON.stringify({}))
+                        res.status(200)
+                        res.send(JSON.stringify({status: "true"}))
                     }
                 })
             } else {
-                res.status(400)
+                res.status(200)
+                res.send(JSON.stringify({status: "You are too far"}))
             }
     } else {
-        res.status(400)
+        res.status(200)
+        res.send(JSON.stringify({status: "There is no such user or lesson"}))
     }
 })
 

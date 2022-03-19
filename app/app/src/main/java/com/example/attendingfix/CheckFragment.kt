@@ -63,12 +63,12 @@ class CheckFragment : Fragment() {
             run() {
                 try {
                     val response: Response = myActivity.httpClient.newCall(request).execute()
-                    val code = response.code
-                    if(code == 200) {
-                        val reqData = JSONArray(response.body!!.string())
+                    val reqData = JSONObject(response.body!!.string())
+                    if(reqData.get("status").toString() == "true") {
+                        val obj = JSONArray(reqData.get("data").toString())
                         Log.d("response", "DONE")
-                        for( i in 0 until reqData.length()){
-                            val lessonObj = reqData.getJSONObject(i)
+                        for( i in 0 until obj.length()){
+                            val lessonObj = obj.getJSONObject(i)
                             newData.add(IRecyclerViewItemMapHandler(lessonObj.get("id").toString(),
                                 mapOf("lesson" to lessonObj.get("name").toString(),
                                       "date" to lessonObj.get("date").toString(),
@@ -81,11 +81,11 @@ class CheckFragment : Fragment() {
                             recyclerView.adapter = adapter
                         }
                     } else {
-                        Log.d("response", "response code: " + code)
+                        Log.d("response", reqData.get("status").toString())
                         myActivity.runOnUiThread {
                             Toast.makeText(
                                 myActivity,
-                                "Please modify with correct data!",
+                                reqData.get("status").toString(),
                                 Toast.LENGTH_LONG
                             ).show()
                         }
@@ -95,7 +95,7 @@ class CheckFragment : Fragment() {
                     myActivity.runOnUiThread {
                         Toast.makeText(
                             myActivity,
-                            "Please modify with correct data!",
+                            "Error with request to server",
                             Toast.LENGTH_LONG
                         ).show()
                     }

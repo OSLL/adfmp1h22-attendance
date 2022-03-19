@@ -55,27 +55,28 @@ class MainActivity : AppCompatActivity() {
                 run() {
                     try {
                         val response: Response = httpClient.newCall(request).execute()
-                        val code = response.code
-                        if(code == 202) {
-                            val reqData = JSONObject(response.body!!.string())
+                        val reqData = JSONObject(response.body!!.string())
+                        if(reqData.get("status").toString() == "true") {
+                            val obj = JSONObject(reqData.get("data").toString())
                             Log.d("response", "DONE")
                             val newData = arrayListOf(
-                                reqData.get("id").toString(),
-                                reqData.get("lastname").toString(),
-                                reqData.get("firstname").toString(),
-                                reqData.get("secondname").toString(),
-                                reqData.get("email").toString(),
-                                reqData.get("telnum").toString(),
-                                reqData.get("status").toString()
+                                obj.get("id").toString(),
+                                obj.get("lastname").toString(),
+                                obj.get("firstname").toString(),
+                                obj.get("secondname").toString(),
+                                obj.get("email").toString(),
+                                obj.get("telnum").toString(),
+                                obj.get("status").toString(),
+                                obj.get("group").toString()
                             )
                             userInfo = newData
                             navBarButtonClickHandler(3, this.supportFragmentManager)
                         } else {
-                            Log.d("response", "response code: " + code)
+                            Log.d("response", reqData.get("status").toString())
                             this.runOnUiThread {
                                 Toast.makeText(
                                     this,
-                                    "Please modify with correct data!",
+                                    reqData.get("status").toString(),
                                     Toast.LENGTH_LONG
                                 ).show()
                             }
@@ -85,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                         this.runOnUiThread {
                             Toast.makeText(
                                 this,
-                                "Please modify with correct data!",
+                                "Error with request to server",
                                 Toast.LENGTH_LONG
                             ).show()
                         }
@@ -118,17 +119,17 @@ class MainActivity : AppCompatActivity() {
                         run() {
                             try {
                                 val response: Response = httpClient.newCall(request).execute()
-                                val code = response.code
-                                if(code == 201) {
+                                val reqData = JSONObject(response.body!!.string())
+                                if(reqData.get("status").toString() == "true") {
                                     this.runOnUiThread{
                                         callback()
                                     }
                                 } else {
-                                    Log.d("response", "response code: " + code)
+                                    Log.d("response", reqData.get("status").toString())
                                     this.runOnUiThread {
                                         Toast.makeText(
                                             this,
-                                            "Internal error on server, please try later!",
+                                            reqData.get("status").toString(),
                                             Toast.LENGTH_LONG
                                         ).show()
                                     }
@@ -138,7 +139,7 @@ class MainActivity : AppCompatActivity() {
                                 this.runOnUiThread {
                                     Toast.makeText(
                                         this,
-                                        "Internal error on server, please try later!",
+                                        "Error with request to server",
                                         Toast.LENGTH_LONG
                                     ).show()
                                 }

@@ -75,29 +75,29 @@ class FragmentRegister : Fragment() {
                             run() {
                                 try {
                                     val response: Response = httpClient.newCall(request).execute()
-                                    val code = response.code
-                                    if(code == 201) {
-                                        val reqData = JSONObject(response.body!!.string())
+                                    val reqData = JSONObject(response.body!!.string())
+                                    if(reqData.get("status").toString() == "true"){
+                                        val obj = JSONObject(reqData.get("data").toString())
                                         Log.d("response", "DONE")
                                         val intent = Intent(context, MainActivity::class.java)
                                         val data = arrayListOf(
-                                            reqData.get("id"),
-                                            reqData.get("lastname"),
-                                            reqData.get("firstname"),
-                                            reqData.get("secondname"),
-                                            reqData.get("email"),
-                                            reqData.get("telnum"),
-                                            reqData.get("status"),
-                                            reqData.get("group")
+                                            obj.get("id"),
+                                            obj.get("lastname"),
+                                            obj.get("firstname"),
+                                            obj.get("secondname"),
+                                            obj.get("email"),
+                                            obj.get("telnum"),
+                                            obj.get("status"),
+                                            obj.get("group")
                                         )
                                         intent.putExtra("userInfo", data)
                                         startActivity(intent)
-                                    } else if(code == 400){
-                                        Log.d("response", "Already exists")
+                                    } else {
+                                        Log.d("response", reqData.get("status").toString())
                                         requireActivity().runOnUiThread {
                                             Toast.makeText(
                                                 activity,
-                                                "Account with this email already exists!",
+                                                reqData.get("status").toString(),
                                                 Toast.LENGTH_LONG
                                             ).show()
                                         }
@@ -107,7 +107,7 @@ class FragmentRegister : Fragment() {
                                     requireActivity().runOnUiThread {
                                         Toast.makeText(
                                             activity,
-                                            "Please enter correct data!",
+                                            "Error with request to server",
                                             Toast.LENGTH_LONG
                                         ).show()
                                     }
@@ -116,7 +116,7 @@ class FragmentRegister : Fragment() {
                         }
                         thread.start()
             } else {
-                val toast = Toast.makeText(context, "Please enter correct data!", Toast.LENGTH_LONG)
+                val toast = Toast.makeText(context, "Please enter correct data! You need 3 words in ФИО, word in email, number in Phone and two equal passwords.", Toast.LENGTH_LONG)
                 toast.show()
             }
         }
