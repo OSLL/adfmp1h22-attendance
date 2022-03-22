@@ -2,10 +2,8 @@
 
 ## Deploy
 
-1. Install `npm`
-2. In `backend` folder run `Terminal`
-3. Run `npm run dev`
-4. Open `app` folder from Android studio and `Run`
+1. Run `docker-compose up -d`
+2. Open `app` folder from Android studio and `Run`
 
 ## Testing
 
