@@ -4,6 +4,7 @@
 
 1. Run `docker-compose up -d`
 2. Open `app` folder from Android studio and `Run`
+3. To stop server run script `stop.sh`
 
 ## Testing
 
