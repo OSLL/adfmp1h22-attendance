@@ -26,7 +26,7 @@ import org.json.JSONObject
  */
 class FragmentLogin : Fragment() {
 
-    val httpClient = OkHttpClient()
+    val httpClient = OkHttpClient.Builder().retryOnConnectionFailure(true).build()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,7 +96,7 @@ class FragmentLogin : Fragment() {
                             requireActivity().runOnUiThread {
                                 Toast.makeText(
                                     activity,
-                                    "Error with request to server",
+                                    "Error with request to server\n Error: $e",
                                     Toast.LENGTH_LONG
                                 ).show()
                             }

@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     var current_fragment: Int = 2
 
-    val httpClient = OkHttpClient()
+    val httpClient = OkHttpClient.Builder().retryOnConnectionFailure(true).build()
 
     var userInfo = arrayListOf<String>()
 
@@ -86,7 +86,8 @@ class MainActivity : AppCompatActivity() {
                         this.runOnUiThread {
                             Toast.makeText(
                                 this,
-                                "Error with request to server",
+                                "Error with request to server\n" +
+                                        " Error: $e",
                                 Toast.LENGTH_LONG
                             ).show()
                         }
@@ -139,7 +140,8 @@ class MainActivity : AppCompatActivity() {
                                 this.runOnUiThread {
                                     Toast.makeText(
                                         this,
-                                        "Error with request to server",
+                                        "Error with request to server\n" +
+                                                " Error: $e",
                                         Toast.LENGTH_LONG
                                     ).show()
                                 }

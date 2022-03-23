@@ -57,6 +57,9 @@ class CheckFragment : Fragment() {
 
         val adapter = CheckRecyclerAdapter(this){ toggleButton() }
 
+        Log.d("Data", myActivity.userInfo[7])
+        Log.d("Data", myActivity.userInfo[0])
+
         val request = Request.Builder().url("http://10.0.2.2:3001/lessons/${myActivity.userInfo[7]}/${myActivity.userInfo[0]}").build()
         val newData = mutableListOf<IRecyclerViewItemMapHandler>()
         val thread = Thread {
@@ -95,7 +98,7 @@ class CheckFragment : Fragment() {
                     myActivity.runOnUiThread {
                         Toast.makeText(
                             myActivity,
-                            "Error with request to server",
+                            "Error with request to server Check",
                             Toast.LENGTH_LONG
                         ).show()
                     }

@@ -39,8 +39,10 @@ app.post('/users/register', (req, res) => {
             if(err){
                 console.log(err)
                 console.log("Error writing to users.json")
+                res.status(200)
                 res.send(JSON.stringify({status: "Internal server error"}))
             } else {
+                res.status(200)
                 res.send(JSON.stringify({status: "true", data: newUser}))
             }
         })
@@ -134,6 +136,7 @@ app.get('/lessons/:group/:userId', (req, res) => {
     const lessonsChecked = Checks.filter(check => check.userId === userId)
         .map(check => check.lessonId)
     const lessonsDif = lessons.filter(lesson => !lessonsChecked.includes(lesson.id))
+    res.status(200)
     res.send(JSON.stringify({status: "true", data: lessonsDif}))
 })
 
