@@ -1,6 +1,8 @@
 package com.example.attendingfix
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,7 +16,6 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
-import java.io.IOException
 
 
 /**
@@ -57,13 +58,15 @@ class FragmentRegister : Fragment() {
                     telnum.text.toString().isNotEmpty() &&
                     password.text.toString().isNotEmpty() &&
                     password.text.toString() == rePassword.text.toString()){
+                        val emailValue = email.text.toString()
+                        val passwordValue = password.text.toString()
                         val json = JSONObject()
                         json.put("firstname", fio.text.toString().split(' ')[1])
                             .put("lastname", fio.text.toString().split(' ')[0])
                             .put("secondname", fio.text.toString().split(' ')[2])
-                            .put("email", email.text.toString())
+                            .put("email", emailValue)
                             .put("telnum", telnum.text.toString())
-                            .put("password", password.text.toString())
+                            .put("password", passwordValue)
                         fio.setText("")
                         email.setText("")
                         telnum.setText("")
@@ -79,6 +82,18 @@ class FragmentRegister : Fragment() {
                                     if(reqData.get("status").toString() == "true"){
                                         val obj = JSONObject(reqData.get("data").toString())
                                         Log.d("response", "DONE")
+
+                                        val APP_PREFERENCES: String = "storeddata"
+                                        val APP_PREFERENCES_LOGIN = "Login"
+                                        val APP_PREFERENCES_PASSWORD = "Password"
+
+                                        val mSettings = requireActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
+
+                                        val editor: SharedPreferences.Editor = mSettings.edit()
+                                        editor.putString(APP_PREFERENCES_LOGIN, emailValue)
+                                        editor.putString(APP_PREFERENCES_PASSWORD, passwordValue)
+                                        editor.apply()
+
                                         val intent = Intent(context, MainActivity::class.java)
                                         val data = arrayListOf(
                                             obj.get("id"),

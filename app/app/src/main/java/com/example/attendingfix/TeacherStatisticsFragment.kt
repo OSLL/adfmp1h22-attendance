@@ -112,17 +112,17 @@ class TeacherStatisticsFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(currentView.context)
 
         //создание адаптеров
-        adapter_lessons = StatisticRecyclerAdapter(this,
+        val adapter_lessons = StatisticRecyclerAdapter(this,
             {item, str -> filterRuleLessons(item, str)},
             {binding, item, text1, text2, text3 -> lessonsBindFunction(binding, item, text1, text2, text3)},
             R.layout.fragment_statistic_view_student_lesson_item)
-        adapter_lessons?.setItems(requireContext(), emulated_data_Lessons["items"] ?: listOf())
+        adapter_lessons.setItems(requireContext(), emulated_data_Lessons["items"] ?: listOf())
 
-        adapter_students = StatisticRecyclerAdapter(this,
+        val adapter_students = StatisticRecyclerAdapter(this,
             {item, str -> filterRuleStudents(item, str)},
             {binding, item, text1, text2, text3 -> studentsBindFunction(binding, item, text1, text2, text3)},
             R.layout.fragment_statistic_view_student_lesson_item)
-        adapter_students?.setItems(requireContext(), emulated_data_Students["items"] ?: listOf())
+        adapter_students.setItems(requireContext(), emulated_data_Students["items"] ?: listOf())
 
         //прикрепление базового адаптера
         recyclerView.adapter = adapter_lessons
@@ -139,6 +139,7 @@ class TeacherStatisticsFragment : Fragment() {
         //кнопки
         val studentsButton: Button = currentView.findViewById(R.id.studentsStatsButton)
         val lessonsButton: Button = currentView.findViewById(R.id.lessonsStatsButton)
+        val takeAllButton: Button = currentView.findViewById(R.id.take_all_button)
 
         studentsButton.setOnClickListener {
             recyclerView.adapter = adapter_students
@@ -149,6 +150,20 @@ class TeacherStatisticsFragment : Fragment() {
             recyclerView.adapter = adapter_lessons
             isLessons = true
         }
+
+        takeAllButton.setOnClickListener {
+            if((it as Button).text == "Отмена"){
+                it.setText("Взять всё")
+            } else {
+                it.setText("Отмена")
+            }
+            if(isLessons){
+                adapter_lessons.selectAll()
+            } else {
+                adapter_students.selectAll()
+            }
+        }
+
     }
 
     companion object {

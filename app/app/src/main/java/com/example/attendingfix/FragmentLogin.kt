@@ -1,6 +1,8 @@
 package com.example.attendingfix
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.util.Log
@@ -54,8 +56,10 @@ class FragmentLogin : Fragment() {
             if(email.text.toString().isNotEmpty() &&
                 password.text.toString().isNotEmpty()){
                 val json = JSONObject()
-                json.put("email", email.text.toString())
-                    .put("password", password.text.toString())
+                val emailValue = email.text.toString()
+                val passwordValue = password.text.toString()
+                json.put("email", emailValue)
+                    .put("password", passwordValue)
                 email.setText("")
                 password.setText("")
                 val reqBody = json.toString().toRequestBody(JSON)
@@ -68,6 +72,18 @@ class FragmentLogin : Fragment() {
                             if(reqData.get("status").toString() == "true") {
                                 val obj = JSONObject(reqData.get("data").toString())
                                 Log.d("response", "DONE")
+
+                                val APP_PREFERENCES: String = "storeddata"
+                                val APP_PREFERENCES_LOGIN = "Login"
+                                val APP_PREFERENCES_PASSWORD = "Password"
+
+                                val mSettings = requireActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
+
+                                val editor: SharedPreferences.Editor = mSettings.edit()
+                                editor.putString(APP_PREFERENCES_LOGIN, emailValue)
+                                editor.putString(APP_PREFERENCES_PASSWORD, passwordValue)
+                                editor.apply()
+
                                 val intent = Intent(context, MainActivity::class.java)
                                 val data = arrayListOf(
                                     obj.get("id"),

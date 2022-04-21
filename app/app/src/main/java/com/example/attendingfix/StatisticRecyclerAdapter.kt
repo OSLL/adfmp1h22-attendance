@@ -160,6 +160,12 @@ class StatisticRecyclerAdapter(
         }
     }
 
+    fun selectAll(){
+        for (item in visibleItems){
+            selectionHelper.handleItem(item)
+        }
+    }
+
     inner class ViewHolder(
         private val binding: ViewDataBinding,
         private val onBindHandler: (ViewDataBinding, IRecyclerViewItemMapHandler, TextView, TextView, TextView) -> Unit

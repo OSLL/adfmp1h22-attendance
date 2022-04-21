@@ -47,12 +47,14 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:layout_weight="2"/>
+
             <Button
+                android:id="@+id/take_all_button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="9"
                 android:text="@string/takeall"
-                android:textSize="11sp"
-                android:layout_weight="9"/>
+                android:textSize="11sp" />
 
         </LinearLayout>
 

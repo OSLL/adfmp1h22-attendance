@@ -1,1 +1,13 @@
-[]
+[
+    {
+        "id": "0",
+        "email": "ks@mail.ru",
+        "password": "qwerty",
+        "firstname": "K",
+        "lastname": "S",
+        "secondname": "S",
+        "group": "1",
+        "telnum": "4503453554354",
+        "status": "Teacher"
+    }
+]
