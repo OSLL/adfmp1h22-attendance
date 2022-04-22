@@ -3,11 +3,12 @@
         "id": "0",
         "email": "ks@mail.ru",
         "password": "qwerty",
-        "firstname": "K",
+        "firstname": "Kirill",
         "lastname": "S",
-        "secondname": "S",
+        "secondname": "Sergeevich",
         "group": "1",
-        "telnum": "4503453554354",
-        "status": "Teacher"
+        "telnum": "450345355435",
+        "status": "Teacher",
+        "surname": "Shirokov"
     }
 ]

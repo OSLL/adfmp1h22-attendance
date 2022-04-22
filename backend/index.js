@@ -54,10 +54,10 @@ app.post('/users/register', (req, res) => {
 app.post('/users/modify', (req, res) => {
     data = req.body
     console.log(data)
-    if(Users.filter(user => user.email === data.email).length === 0){
+    if(Users.filter(user => user.email === data.email).length === 1){
         Users.forEach(element => {
             if(element.id == data.id){
-                element.surname = data.surname
+                element.surname = data.lastname
                 element.firstname = data.firstname
                 element.secondname = data.secondname
                 element.email = data.email
@@ -81,7 +81,7 @@ app.post('/users/modify', (req, res) => {
         })
     } else {
         res.status(200)
-        res.send(JSON.stringify({status: "There already exists user with such email"}))
+        res.send(JSON.stringify({status: "Sorry, can't modify for this e-mail"}))
     }
 })
 

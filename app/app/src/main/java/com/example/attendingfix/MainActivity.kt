@@ -1,9 +1,14 @@
 package com.example.attendingfix
 
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.location.LocationManager
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.NetworkOnMainThreadException
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -13,12 +18,16 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.google.android.gms.location.LocationServices
+import com.theartofdev.edmodo.cropper.CropImage
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
@@ -61,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                             Log.d("response", "DONE")
                             val newData = arrayListOf(
                                 obj.get("id").toString(),
-                                obj.get("lastname").toString(),
+                                obj.get("surname").toString(),
                                 obj.get("firstname").toString(),
                                 obj.get("secondname").toString(),
                                 obj.get("email").toString(),
@@ -232,6 +241,43 @@ class MainActivity : AppCompatActivity() {
         if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode== CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && data != null){
+            val photoURI = CropImage.getActivityResult(data).uri
+            var bitmap: Bitmap? = null
+
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, photoURI)
+            } catch (e: IOException) {
+                Log.d("TAG ", "DIDN'T FOUND BY URI")
+            }
+            val cw = ContextWrapper(applicationContext)
+            val directory: File = cw.getDir("imageDir", MODE_PRIVATE)
+            val mypath = File(directory, "profile.jpg")
+
+            var fos: FileOutputStream? = null
+            try {
+                Log.d("TAG", mypath.toString())
+                fos = FileOutputStream(mypath)
+                Log.d("TAG", fos.toString())
+                bitmap?.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                val APP_PREFERENCES: String = "storeddata"
+                val APP_PREFERENCES_PROFILE_IMAGE = "ProfileImage"
+
+                val mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
+
+                val editor: SharedPreferences.Editor = mSettings.edit()
+                editor.putString(APP_PREFERENCES_PROFILE_IMAGE, directory.absolutePath)
+                editor.apply()
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            } finally {
+                fos?.close()
+            }
         }
     }
 }

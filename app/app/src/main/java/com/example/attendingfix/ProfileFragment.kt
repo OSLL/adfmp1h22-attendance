@@ -1,12 +1,18 @@
 package com.example.attendingfix
 
+import android.content.Context
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
 
 /**
  * A simple [Fragment] subclass.
@@ -37,6 +43,7 @@ class ProfileFragment : Fragment() {
         val parentName: TextView = view.findViewById(R.id.parentNameValue)
         val email: TextView = view.findViewById(R.id.emailValue)
         val phone: TextView = view.findViewById(R.id.phoneValue)
+        val personalImage = view.findViewById<ImageView>(R.id.profile_image)
         val editProfileButton: Button = view.findViewById(R.id.btn_editProfile)
 
         name.text = userInfo[2]
@@ -44,6 +51,19 @@ class ProfileFragment : Fragment() {
         parentName.text = userInfo[3]
         email.text = userInfo[4]
         phone.text = userInfo[5]
+
+        val APP_PREFERENCES: String = "storeddata"
+        val APP_PREFERENCES_PROFILE_IMAGE = "ProfileImage"
+
+        val mSettings = requireActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
+
+        try {
+            val f = File(mSettings.getString(APP_PREFERENCES_PROFILE_IMAGE, null), "profile.jpg")
+            val b = BitmapFactory.decodeStream(FileInputStream(f))
+            personalImage.setImageBitmap(b)
+        } catch (e: FileNotFoundException) {
+            //means there is no image selected yet
+        }
 
         editProfileButton.setOnClickListener {
             val myActivity = activity as MainActivity
