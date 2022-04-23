@@ -41,28 +41,28 @@ class TeacherStatisticsFragment : Fragment() {
 
         val emulated_data_Lessons: Map<String, List<IRecyclerViewItemMapHandler>> =
             mapOf("items" to listOf(
-                IRecyclerViewItemMapHandler(0, mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "34", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(1 ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "35", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(2 ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "32", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(3 ,mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "15", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(4 ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "36", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(5 ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "35", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(6 ,mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "39", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(7 ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "37", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(8 ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "34", "attendanceOutOf" to "40"))
+                IRecyclerViewItemMapHandler("0", mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "34", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("1" ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "35", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("2" ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "32", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("3" ,mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "15", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("4" ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "36", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("5" ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "35", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("6" ,mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "39", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("7" ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "37", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("8" ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "34", "attendanceOutOf" to "40"))
             ))
 
         val emulated_data_Students: Map<String, List<IRecyclerViewItemMapHandler>> =
             mapOf("items" to listOf(
-                IRecyclerViewItemMapHandler(0, mapOf("lesson" to "Android", "fullname" to "Shirokov", "attendance" to "34", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(1 ,mapOf("lesson" to "Math", "fullname" to "Shirikov", "attendance" to "35", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(2 ,mapOf("lesson" to "Haskell", "fullname" to "Shirokov Kirill", "attendance" to "32", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(3 ,mapOf("lesson" to "Android", "fullname" to "Kirill", "attendance" to "15", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(4 ,mapOf("lesson" to "Math", "fullname" to "Petya", "attendance" to "36", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(5 ,mapOf("lesson" to "Haskell", "fullname" to "Vova", "attendance" to "35", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(6 ,mapOf("lesson" to "Android", "fullname" to "Sasha", "attendance" to "39", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(7 ,mapOf("lesson" to "Math", "fullname" to "Shirokov2.0", "attendance" to "37", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler(8 ,mapOf("lesson" to "Haskell", "fullname" to "Shirokov Vova", "attendance" to "34", "attendanceOutOf" to "40"))
+                IRecyclerViewItemMapHandler("0", mapOf("lesson" to "Android", "fullname" to "Shirokov", "attendance" to "34", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("1" ,mapOf("lesson" to "Math", "fullname" to "Shirikov", "attendance" to "35", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("2" ,mapOf("lesson" to "Haskell", "fullname" to "Shirokov Kirill", "attendance" to "32", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("3" ,mapOf("lesson" to "Android", "fullname" to "Kirill", "attendance" to "15", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("4" ,mapOf("lesson" to "Math", "fullname" to "Petya", "attendance" to "36", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("5" ,mapOf("lesson" to "Haskell", "fullname" to "Vova", "attendance" to "35", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("6" ,mapOf("lesson" to "Android", "fullname" to "Sasha", "attendance" to "39", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("7" ,mapOf("lesson" to "Math", "fullname" to "Shirokov2.0", "attendance" to "37", "attendanceOutOf" to "40")),
+                IRecyclerViewItemMapHandler("8" ,mapOf("lesson" to "Haskell", "fullname" to "Shirokov Vova", "attendance" to "34", "attendanceOutOf" to "40"))
             ))
 
         val currentView: View = requireView()
