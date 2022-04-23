@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Attendance Checker</string>
+    <string name="check">Подтвердить\nпосещение</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="stats">Статистика</string>
+    <string name="sign">Отметиться</string>
+    <string name="profile">Профиль</string>
+    <string name="noLessonsWarning">На данный момент\nнет доступных занятий</string>
+    <string name="photo">photo</string>
+
+    <string name="swipe_left_for_register">Swipe Left for Register</string>
+    <string name="login">Войти</string>
+    <string name="password">Пароль</string>
+    <string name="e_mail">Email</string>
+    <string name="tag">Make it easy\nOnline Attendance Checker</string>
+    <string name="swipe_right_for_login">Swipe Right for Login</string>
+    <string name="register">Register</string>
+    <string name="register_onButton">Зарегистрироваться</string>
+    <string name="re_type_password">Повторите Пароль</string>
+    <string name="your_name">ФИО полностью</string>
+    <string name="surname">фамилия</string>
+    <string name="name">имя</string>
+    <string name="phone_str">Телефон</string>
+    <string name="familyName">отчество</string>
+    <string name="phone">+7 (777) 777–77–77</string>
+    <string name="Phone_profile_tag">телефон</string>
+    <string name="Email_profile_tag">email</string>
+    <string name="Edit_profile_str">Редактировать профиль</string>
+    <string name="saveChanges_str">Сохранить изменения</string>
+    <string name="takeall">взять всё</string>
+    <string name="export_pdf">Export PDF</string>
+</resources>

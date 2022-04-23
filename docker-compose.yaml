@@ -1,0 +1,15 @@
+version: '3.3'
+services:
+    backend:
+        network_mode: "host"
+        build:
+            context: ./backend
+        image: android_backend_image
+        container_name: android_backend
+        volumes: 
+            - "/etc/timezone:/etc/timezone:ro"
+            - "/etc/localtime:/etc/localtime:ro"
+            - static-content:/files
+volumes:
+  static-content:
+  db-content:
