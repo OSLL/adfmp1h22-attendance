@@ -210,9 +210,22 @@ app.get('/stats/teacher/lessons/:teacherId', (req, res) => {
         lessonsToShow = Lessons.filter(lesson => Checks.filter(check => check.lessonId === lesson.id).length > 0)    //было, значит хоть кто-то на него пришёл
         numberOfVisits = []
         lessonsToShow.forEach(lesson => numberOfVisits.push(`${Checks.filter(check => check.lessonId === lesson.id).length} out of ${Groups.filter(group => group.id === lesson.group)[0].studentsCount}`))
+        userList = []
+        lessonsToShow.forEach(lesson => {
+            usersAttended = []
+            usersString = ""
+            Checks.filter(check => check.lessonId === lesson.id).forEach(check => {
+                user = Users.filter(user => user.id === check.userId)[0]
+                if(!usersAttended.includes(user)){
+                    usersAttended.push(user)
+                    usersString += `${user.lastname} ${user.firstname} ${user.secondname}, `
+                }
+            })
+            userList.push(usersString.slice(0, usersString.length - 2))
+        })
         lessons = []
         for(let i = 0; i < lessonsToShow.length; i++){
-            lessons.push({id: lessonsToShow[i].id, name: lessonsToShow[i].name, date: lessonsToShow[i].date, numberOfVisits: numberOfVisits[i]})
+            lessons.push({id: lessonsToShow[i].id, name: lessonsToShow[i].name, date: lessonsToShow[i].date, numberOfVisits: numberOfVisits[i], extras: userList[i]})
         }
         res.status(200)
         res.send(JSON.stringify({lessons: lessons}))
@@ -240,10 +253,13 @@ app.get('/stats/teacher/students/:teacherId', (req, res) => {
             }
             console.log(lessonForCheck)
             for(let j = 0; j < lessonsForEachStudent[i].length; j++){
+                extras = ""
+                lessonForCheck.filter(lesson => lesson.name === lessonsForEachStudent[i][j]).forEach(lesson => extras += `${lesson.date}, `)
                 items.push({
                     lesson: lessonsForEachStudent[i][j],
                     fullname: `${students[i].lastname} ${students[i].firstname} ${students[i].secondname}`,
-                    numberOfVisits: `${lessonForCheck.filter(lesson => lesson.name === lessonsForEachStudent[i][j]).length} out of ${Lessons.filter(lesson => lesson.group === students[i].group && lesson.name === lessonsForEachStudent[i][j]).length}`
+                    numberOfVisits: `${lessonForCheck.filter(lesson => lesson.name === lessonsForEachStudent[i][j]).length} out of ${Lessons.filter(lesson => lesson.group === students[i].group && lesson.name === lessonsForEachStudent[i][j]).length}`,
+                    extras: extras.slice(0, extras.length - 2)
                 })
             }
         }
@@ -254,5 +270,9 @@ app.get('/stats/teacher/students/:teacherId', (req, res) => {
         res.status(403)
     }
 })
+
+
+
+
 
 app.listen(port, () => console.log('Server listening on port ' + port))

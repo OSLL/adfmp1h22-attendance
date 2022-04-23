@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -43,7 +44,7 @@ class Statistics : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val request = Request.Builder().url("http://10.0.2.2:3001/stats/${(requireActivity() as MainActivity).userInfo[0]}").get().build()
+        val request = Request.Builder().url("http://10.0.2.2:3001/stats/student/${(requireActivity() as MainActivity).userInfo[0]}").get().build()
         val thread = Thread {
             run() {
                 try {
@@ -51,7 +52,6 @@ class Statistics : Fragment() {
                     val reqData = JSONObject(response.body!!.string())
                     Log.d("TAG", reqData.get("items").toString())
                     val objects = JSONArray(reqData.get("items").toString())
-                    Log.d("response", "DONE")
                     val items: MutableList<IRecyclerViewItemMapHandler> = mutableListOf()
                     for(i in 0..(objects.length() - 1)){
                         val obj = objects.getJSONObject(i)
@@ -86,6 +86,8 @@ class Statistics : Fragment() {
 
         val currentView: View = requireView()
 
+        val export_btn = requireActivity().findViewById<Button>(R.id.export_Button)
+
         fun lessonsBindFunction(binding: ViewDataBinding,
                                 item: IRecyclerViewItemMapHandler,
                                 text1: TextView,
@@ -111,6 +113,10 @@ class Statistics : Fragment() {
             R.layout.fragment_statistic_view_student_lesson_item)
         recyclerView.adapter = adapter
 
+        export_btn.setOnClickListener {
+            Toast.makeText(requireContext(), "Student can't export PDF data", Toast.LENGTH_LONG).show()
+        }
+
         fun handleOnTextChange(text: CharSequence?, start: Int, before: Int, count: Int){
             var fil = adapter.getFilter()
             return fil!!.filter(text)
@@ -118,6 +124,12 @@ class Statistics : Fragment() {
 
         val searchEditText: EditText = currentView.findViewById(R.id.filter_editText)
         searchEditText.doOnTextChanged { text, start, before, count -> handleOnTextChange(text, start, before, count) }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val export_btn = requireActivity().findViewById<Button>(R.id.export_Button)
+        export_btn.setOnClickListener(null)
     }
 
     companion object {

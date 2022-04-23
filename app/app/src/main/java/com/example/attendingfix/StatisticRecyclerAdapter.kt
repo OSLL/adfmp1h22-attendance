@@ -83,6 +83,10 @@ class StatisticRecyclerAdapter(
         holder.onBind(item)
     }
 
+    fun getSelectedItems(): List<IRecyclerViewItemMapHandler>{
+        return selectionHelper.getSelectedItems()
+    }
+
     fun setItems(context: Context, newItems: List<IRecyclerViewItemMapHandler>) {
         this.context = context
         if(this.items.isEmpty()){
