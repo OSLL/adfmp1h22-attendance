@@ -1,6 +1,7 @@
 package com.example.attendingfix
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +9,15 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONArray
+import org.json.JSONObject
 
 /**
  * A simple [Fragment] subclass.
@@ -36,36 +42,114 @@ class TeacherStatisticsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_teacher_statistics, container, false)
     }
 
+    private fun loadDataLessons() {
+
+        val request = Request.Builder().url("http://10.0.2.2:3001/stats/teacher/lessons/${(requireActivity() as MainActivity).userInfo[0]}").get().build()
+        val newData = mutableListOf<IRecyclerViewItemMapHandler>()
+        val thread = Thread {
+            run() {
+                try {
+                    val response: Response = (requireActivity() as MainActivity).httpClient.newCall(request).execute()
+                    val reqData = JSONObject(response.body!!.string())
+                    val lessons = reqData.getJSONArray("lessons")
+                    for (i in 0..lessons.length() - 1){
+                        val lesson = lessons.getJSONObject(i)
+                        newData.add(IRecyclerViewItemMapHandler(
+                            lesson.getString("id"),
+                            mapOf(
+                                "lesson" to lesson.getString("name"),
+                                "date" to lesson.getString("date"),
+                                "attendance" to lesson.getString("numberOfVisits")
+                            )
+                        ))
+                    }
+                    requireActivity().runOnUiThread{
+                        adapter_lessons?.setItems(requireContext(), newData)
+                        adapter_lessons?.notifyDataSetChanged()
+                    }
+                } catch (e: Exception) {
+                    Log.d("response", e.toString())
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(
+                            requireContext(),
+                            "Error with request to server Check",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+        }
+        thread.start()
+    }
+
+    private fun loadDataStudents() {
+
+        val request = Request.Builder().url("http://10.0.2.2:3001/stats/teacher/students/${(requireActivity() as MainActivity).userInfo[0]}").get().build()
+        val newData = mutableListOf<IRecyclerViewItemMapHandler>()
+        val thread = Thread {
+            run() {
+                try {
+                    val response: Response = (requireActivity() as MainActivity).httpClient.newCall(request).execute()
+                    val reqData = JSONObject(response.body!!.string())
+                    val items = reqData.getJSONArray("items")
+                    for (i in 0..items.length() - 1){
+                        val item = items.getJSONObject(i)
+                        newData.add(IRecyclerViewItemMapHandler(
+                            "${i}",
+                            mapOf(
+                                "lesson" to item.getString("lesson"),
+                                "fullname" to item.getString("fullname"),
+                                "attendance" to item.getString("numberOfVisits")
+                            )
+                        ))
+                    }
+                    requireActivity().runOnUiThread{
+                        adapter_students?.setItems(requireContext(), newData)
+                        adapter_students?.notifyDataSetChanged()
+                    }
+                } catch (e: Exception) {
+                    Log.d("response", e.toString())
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(
+                            requireContext(),
+                            "Error with request to server Check",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+        }
+        thread.start()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val emulated_data_Lessons: Map<String, List<IRecyclerViewItemMapHandler>> =
-            mapOf("items" to listOf(
-                IRecyclerViewItemMapHandler("0", mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "34", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("1" ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "35", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("2" ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "32", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("3" ,mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "15", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("4" ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "36", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("5" ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "35", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("6" ,mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "39", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("7" ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "37", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("8" ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "34", "attendanceOutOf" to "40"))
-            ))
-
-        val emulated_data_Students: Map<String, List<IRecyclerViewItemMapHandler>> =
-            mapOf("items" to listOf(
-                IRecyclerViewItemMapHandler("0", mapOf("lesson" to "Android", "fullname" to "Shirokov", "attendance" to "34", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("1" ,mapOf("lesson" to "Math", "fullname" to "Shirikov", "attendance" to "35", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("2" ,mapOf("lesson" to "Haskell", "fullname" to "Shirokov Kirill", "attendance" to "32", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("3" ,mapOf("lesson" to "Android", "fullname" to "Kirill", "attendance" to "15", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("4" ,mapOf("lesson" to "Math", "fullname" to "Petya", "attendance" to "36", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("5" ,mapOf("lesson" to "Haskell", "fullname" to "Vova", "attendance" to "35", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("6" ,mapOf("lesson" to "Android", "fullname" to "Sasha", "attendance" to "39", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("7" ,mapOf("lesson" to "Math", "fullname" to "Shirokov2.0", "attendance" to "37", "attendanceOutOf" to "40")),
-                IRecyclerViewItemMapHandler("8" ,mapOf("lesson" to "Haskell", "fullname" to "Shirokov Vova", "attendance" to "34", "attendanceOutOf" to "40"))
-            ))
-
         val currentView: View = requireView()
+
+        fun lessonsBindFunction(binding: ViewDataBinding,
+                                item: IRecyclerViewItemMapHandler,
+                                text1: TextView,
+                                text2: TextView,
+                                text3: TextView){
+            binding.apply {
+                text1.text = item.data["lesson"]
+                text2.text = item.data["date"]
+                text3.text = """${item.data["attendance"]}"""
+            }
+        }
+
+        fun studentsBindFunction(binding: ViewDataBinding,
+                                 item: IRecyclerViewItemMapHandler,
+                                 text1: TextView,
+                                 text2: TextView,
+                                 text3: TextView){
+            binding.apply {
+                text1.text = item.data["fullname"]
+                text2.text = item.data["lesson"]
+                text3.text = """${item.data["attendance"]}"""
+            }
+        }
 
         //функции-помощники
         fun filterRuleLessons(item: IRecyclerViewItemMapHandler, str: String): Boolean {
@@ -76,29 +160,26 @@ class TeacherStatisticsFragment : Fragment() {
             return item.data["fullname"]?.lowercase()?.contains(str.lowercase()) ?: false
         }
 
-        fun lessonsBindFunction(binding: ViewDataBinding,
-                                item: IRecyclerViewItemMapHandler,
-                                text1: TextView,
-                                text2: TextView,
-                                text3: TextView){
-            binding.apply {
-                text1.text = item.data["lesson"]
-                text2.text = item.data["date"]
-                text3.text = """${item.data["attendance"]} out of ${item.data["attendanceOutOf"]}"""
-            }
-        }
+        //создание адаптеров
+        adapter_lessons = StatisticRecyclerAdapter(this,
+            {item, str -> filterRuleLessons(item, str)},
+            {binding, item, text1, text2, text3 -> lessonsBindFunction(binding, item, text1, text2, text3)},
+            R.layout.fragment_statistic_view_student_lesson_item)
 
-        fun studentsBindFunction(binding: ViewDataBinding,
-                                item: IRecyclerViewItemMapHandler,
-                                text1: TextView,
-                                text2: TextView,
-                                text3: TextView){
-            binding.apply {
-                text1.text = item.data["fullname"]
-                text2.text = item.data["lesson"]
-                text3.text = """${item.data["attendance"]} out of ${item.data["attendanceOutOf"]}"""
-            }
-        }
+        adapter_students = StatisticRecyclerAdapter(this,
+            {item, str -> filterRuleStudents(item, str)},
+            {binding, item, text1, text2, text3 -> studentsBindFunction(binding, item, text1, text2, text3)},
+            R.layout.fragment_statistic_view_student_lesson_item)
+
+        loadDataLessons()
+        loadDataStudents()
+
+        val recyclerView: RecyclerView = currentView.findViewById(R.id.stat_recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(currentView.context)
+
+        //прикрепление базового адаптера
+        recyclerView.adapter = adapter_lessons
+        Log.d("TAG", "Hi")
 
         fun getAdapter(): StatisticRecyclerAdapter? {
             if(isLessons){
@@ -107,25 +188,6 @@ class TeacherStatisticsFragment : Fragment() {
                 return adapter_students
             }
         }
-
-        val recyclerView: RecyclerView = currentView.findViewById(R.id.stat_recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(currentView.context)
-
-        //создание адаптеров
-        val adapter_lessons = StatisticRecyclerAdapter(this,
-            {item, str -> filterRuleLessons(item, str)},
-            {binding, item, text1, text2, text3 -> lessonsBindFunction(binding, item, text1, text2, text3)},
-            R.layout.fragment_statistic_view_student_lesson_item)
-        adapter_lessons.setItems(requireContext(), emulated_data_Lessons["items"] ?: listOf())
-
-        val adapter_students = StatisticRecyclerAdapter(this,
-            {item, str -> filterRuleStudents(item, str)},
-            {binding, item, text1, text2, text3 -> studentsBindFunction(binding, item, text1, text2, text3)},
-            R.layout.fragment_statistic_view_student_lesson_item)
-        adapter_students.setItems(requireContext(), emulated_data_Students["items"] ?: listOf())
-
-        //прикрепление базового адаптера
-        recyclerView.adapter = adapter_lessons
 
         //про фильтрацию
         fun handleOnTextChange(text: CharSequence?, start: Int, before: Int, count: Int){
@@ -158,9 +220,9 @@ class TeacherStatisticsFragment : Fragment() {
                 it.setText("Отмена")
             }
             if(isLessons){
-                adapter_lessons.selectAll()
+                adapter_lessons?.selectAll()
             } else {
-                adapter_students.selectAll()
+                adapter_students?.selectAll()
             }
         }
 

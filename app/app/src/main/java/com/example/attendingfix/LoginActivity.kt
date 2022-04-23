@@ -75,7 +75,7 @@ class LoginActivity : AppCompatActivity() {
                             val intent = Intent(this, MainActivity::class.java)
                             val data = arrayListOf(
                                 obj.get("id"),
-                                obj.get("surname"),
+                                obj.get("lastname"),
                                 obj.get("firstname"),
                                 obj.get("secondname"),
                                 obj.get("email"),

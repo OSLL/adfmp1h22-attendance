@@ -1,17 +1,23 @@
 package com.example.attendingfix
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONArray
+import org.json.JSONObject
 
 /**
  * A simple [Fragment] subclass.
@@ -24,6 +30,8 @@ class Statistics : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    val httpClient = OkHttpClient.Builder().retryOnConnectionFailure(true).build()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,18 +43,46 @@ class Statistics : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val emulated_data: Map<String, List<IRecyclerViewItemMapHandler>> =
-            mapOf("items" to listOf(
-                IRecyclerViewItemMapHandler("0", mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "Was on lesson")),
-                IRecyclerViewItemMapHandler("1" ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "Not present")),
-                IRecyclerViewItemMapHandler("2" ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "Was on lesson")),
-                IRecyclerViewItemMapHandler("3" ,mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "Not present")),
-                IRecyclerViewItemMapHandler("4" ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "Was on lesson")),
-                IRecyclerViewItemMapHandler("5" ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "Not present")),
-                IRecyclerViewItemMapHandler("6" ,mapOf("lesson" to "Android", "date" to "02.02.2022", "attendance" to "Was on lesson")),
-                IRecyclerViewItemMapHandler("7" ,mapOf("lesson" to "Math", "date" to "02.02.2022", "attendance" to "Was on lesson")),
-                IRecyclerViewItemMapHandler("8" ,mapOf("lesson" to "Haskell", "date" to "02.02.2022", "attendance" to "Was on lesson"))
-            ))
+        val request = Request.Builder().url("http://10.0.2.2:3001/stats/${(requireActivity() as MainActivity).userInfo[0]}").get().build()
+        val thread = Thread {
+            run() {
+                try {
+                    val response: Response = httpClient.newCall(request).execute()
+                    val reqData = JSONObject(response.body!!.string())
+                    Log.d("TAG", reqData.get("items").toString())
+                    val objects = JSONArray(reqData.get("items").toString())
+                    Log.d("response", "DONE")
+                    val items: MutableList<IRecyclerViewItemMapHandler> = mutableListOf()
+                    for(i in 0..(objects.length() - 1)){
+                        val obj = objects.getJSONObject(i)
+                        items.add(IRecyclerViewItemMapHandler(obj.getString("id"),
+                            mapOf(
+                            "lesson" to obj.getString("lesson"),
+                            "date" to obj.getString("date"),
+                            "attendance" to obj.getString("attendance")
+                            )
+                        ))
+                    }
+                    requireActivity().runOnUiThread {
+                        val currentView: View = requireView()
+                        val recyclerView: RecyclerView = currentView.findViewById(R.id.stat_recyclerView)
+                        val adapter = (recyclerView.adapter as StatisticRecyclerAdapter)
+                        adapter.setItems(requireContext(), items)
+                        adapter.notifyDataSetChanged()
+                    }
+                } catch (e: Exception) {
+                    Log.d("response", e.toString())
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(
+                            requireContext(),
+                            "Error with request to server\n Error: $e",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+        }
+        thread.start()
 
         val currentView: View = requireView()
 
@@ -73,7 +109,6 @@ class Statistics : Fragment() {
             {item, str -> filterRule(item, str)},
             {binding, item, text1, text2, text3 -> lessonsBindFunction(binding, item, text1, text2, text3)},
             R.layout.fragment_statistic_view_student_lesson_item)
-        adapter.setItems(requireContext(), emulated_data["items"] ?: listOf())
         recyclerView.adapter = adapter
 
         fun handleOnTextChange(text: CharSequence?, start: Int, before: Int, count: Int){

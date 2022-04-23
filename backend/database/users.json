@@ -9,6 +9,17 @@
         "group": "1",
         "telnum": "450345355435",
         "status": "Teacher",
-        "surname": "Shirokov"
+        "surname": "S"
+    },
+    {
+        "id": "1",
+        "email": "ks@mail.r",
+        "password": "qwerty",
+        "firstname": "K",
+        "lastname": "S",
+        "secondname": "S",
+        "group": "1",
+        "telnum": "7564",
+        "status": "Student"
     }
 ]

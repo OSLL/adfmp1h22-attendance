@@ -3,6 +3,7 @@ const fs = require('fs')
 const Users = require('./database/users.json')
 const Lessons = require('./database/lessons.json')
 const Checks = require('./database/checks.json')
+const Groups = require('./database/groups.json')
 const { use } = require('express/lib/application')
 
 const port = 3001
@@ -69,14 +70,13 @@ app.post('/users/modify', (req, res) => {
                         console.log("Error writing to users.json")
                         res.status(200)
                         res.send(JSON.stringify({status: "Internal server error"}))
+                        return
                     } else {
                         res.status(200)
                         res.send(JSON.stringify({status: "true", data: element}))
+                        return
                     }
                 })
-            } else {
-                res.status(200)
-                res.send(JSON.stringify({status: "You don't have permission to change this data"}))
             }
         })
     } else {
@@ -93,9 +93,11 @@ app.post('/users/login', (req, res) => {
         if(user.password === data.password){
             res.status(200)
             res.send(JSON.stringify({status: "true", data: user}))
+            return
         } else {
             res.status(200)
             res.send(JSON.stringify({status: "Incorrect password for this email"}))
+            return
         }
     }
     res.status(200)
@@ -133,6 +135,9 @@ app.get('/lessons/:group/:userId', (req, res) => {
     group = req.params.group
     userId = req.params.userId
     const lessons = Lessons.filter(lesson => lesson.group === group)
+        .filter(lesson => lesson.date.slice(0,2) == new Date().toISOString().slice(8,10)) //check day
+        .filter(lesson => lesson.date.slice(3,5) == new Date().toISOString().slice(5,7)) ////check month
+        .filter(lesson => lesson.date.slice(6,10) == new Date().toISOString().slice(0,4)) ////check year
     const lessonsChecked = Checks.filter(check => check.userId === userId)
         .map(check => check.lessonId)
     const lessonsDif = lessons.filter(lesson => !lessonsChecked.includes(lesson.id))
@@ -160,7 +165,8 @@ app.post('/lessons/check/:lessonId/:userId', (req, res) => {
                 Checks.push({
                     id: `${Checks.length}`,
                     lessonId: lessonId,
-                    userId: userId
+                    userId: userId,
+                    status: "Was on lesson"
                 })
                 fs.writeFile('./database/checks.json', JSON.stringify(Checks, null, 4), 'utf8', (err) => {
                     if(err){
@@ -179,6 +185,73 @@ app.post('/lessons/check/:lessonId/:userId', (req, res) => {
     } else {
         res.status(200)
         res.send(JSON.stringify({status: "There is no such user or lesson"}))
+    }
+})
+
+app.get('/stats/student/:userId', (req, res) => {
+    userId = req.params.userId
+    lessons = []
+    checks = Checks.filter(check => check.userId === userId)
+    checks.forEach(check => {
+        lessons.push(Lessons.filter(lesson => lesson.id === check.lessonId)[0])
+    })
+    items = []
+    console.log(checks)
+    for(let i = 0; i < checks.length; i++){
+        items.push({id: checks[i].id, lesson: lessons[i].name, date: lessons[i].date, attendance: checks[i].status})
+    }
+    res.status(200)
+    res.send(JSON.stringify({items: items}))
+})
+
+app.get('/stats/teacher/lessons/:teacherId', (req, res) => {
+    teacherId = req.params.teacherId
+    if(TEACHERS.includes(Users.filter(user => user.id === teacherId)[0].email)){
+        lessonsToShow = Lessons.filter(lesson => Checks.filter(check => check.lessonId === lesson.id).length > 0)    //было, значит хоть кто-то на него пришёл
+        numberOfVisits = []
+        lessonsToShow.forEach(lesson => numberOfVisits.push(`${Checks.filter(check => check.lessonId === lesson.id).length} out of ${Groups.filter(group => group.id === lesson.group)[0].studentsCount}`))
+        lessons = []
+        for(let i = 0; i < lessonsToShow.length; i++){
+            lessons.push({id: lessonsToShow[i].id, name: lessonsToShow[i].name, date: lessonsToShow[i].date, numberOfVisits: numberOfVisits[i]})
+        }
+        res.status(200)
+        res.send(JSON.stringify({lessons: lessons}))
+    } else {
+        res.status(403)  
+    }
+})
+
+app.get('/stats/teacher/students/:teacherId', (req, res) => {
+    teacherId = req.params.teacherId
+    if(TEACHERS.includes(Users.filter(user => user.id === teacherId)[0].email)){
+        students = Users.filter(user => !TEACHERS.includes(user.email))
+        lessonsForEachStudent = []
+        items = []
+        students.forEach(student => {
+            lessons = []
+            Lessons.filter(lesson => lesson.group === student.group).forEach(lesson => (!lessons.includes(lesson.name)) ? lessons.push(lesson.name) : {})
+            lessonsForEachStudent.push(lessons)
+        })
+        for(let i = 0; i < lessonsForEachStudent.length; i++){
+            oneUserChecks = Checks.filter(check => check.userId === students[i].id)
+            lessonForCheck = []
+            for(let j = 0; j < oneUserChecks.length; j++){
+                lessonForCheck.push(Lessons.filter(lesson => lesson.id === oneUserChecks[j].lessonId)[0])
+            }
+            console.log(lessonForCheck)
+            for(let j = 0; j < lessonsForEachStudent[i].length; j++){
+                items.push({
+                    lesson: lessonsForEachStudent[i][j],
+                    fullname: `${students[i].lastname} ${students[i].firstname} ${students[i].secondname}`,
+                    numberOfVisits: `${lessonForCheck.filter(lesson => lesson.name === lessonsForEachStudent[i][j]).length} out of ${Lessons.filter(lesson => lesson.group === students[i].group && lesson.name === lessonsForEachStudent[i][j]).length}`
+                })
+            }
+        }
+        res.status(200)
+        res.send(JSON.stringify({items: items}))
+        return
+    } else {
+        res.status(403)
     }
 })
 

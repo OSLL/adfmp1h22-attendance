@@ -42,8 +42,6 @@ class CheckFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //val data = получение данных с сервера
-
         val currentView: View = requireView()
         val checkButton: Button = currentView.findViewById(R.id.mainCheckButton)
 
@@ -51,14 +49,9 @@ class CheckFragment : Fragment() {
             checkButton.isClickable = !checkButton.isClickable
         }
 
-        val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
-
         val myActivity = activity as MainActivity
 
         val adapter = CheckRecyclerAdapter(this){ toggleButton() }
-
-        Log.d("Data", myActivity.userInfo[7])
-        Log.d("Data", myActivity.userInfo[0])
 
         val request = Request.Builder().url("http://10.0.2.2:3001/lessons/${myActivity.userInfo[7]}/${myActivity.userInfo[0]}").build()
         val newData = mutableListOf<IRecyclerViewItemMapHandler>()
